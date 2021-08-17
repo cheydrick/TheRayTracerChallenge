@@ -2,10 +2,10 @@
 My implementation of the ray tracer described in The Ray Tracer Challenge by Jamis Buck.
 
 
-# ToDo
+# To Do
 - [ ] Chapter One: Tuples, Points, and Vectors
-  - [ ] Tuples
-  - [ ] Operations
+  - [x] Tuples
+  - [x] Operations
   - [ ] Putting It Together
 - [ ] Chapter 2: Drawing on a Canvas
   - [ ] Representing Colors
