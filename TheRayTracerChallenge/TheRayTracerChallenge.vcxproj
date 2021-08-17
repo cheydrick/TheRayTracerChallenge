@@ -142,6 +142,7 @@
     <ClCompile Include="TheRayTracerChallenge.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="color.h" />
     <ClInclude Include="misc.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="tuple.h" />

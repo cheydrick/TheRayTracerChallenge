@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include "tuple.h"
+#include "color.h"
 #include "misc.h"
 
 // All tests return 1 for success, <0 for failure.
@@ -299,6 +300,70 @@ int test_projectile()
     return 1;
 }
 
+// Chapter 2 Tests
+
+int test_new_color()
+{
+    struct Color color = new_color(-0.5, 0.4, 1.7);
+
+    if (!is_equal_float(color.r, -0.5)) { return -1; }
+    if (!is_equal_float(color.g, 0.4)) { return -2; }
+    if (!is_equal_float(color.b, 1.7)) { return -3; }
+
+    return 1;
+}
+
+int test_add_colors()
+{
+    struct Color a = new_color(0.9, 0.6, 0.75);
+    struct Color b = new_color(0.7, 0.1, 0.25);
+    struct Color color = add_colors(a, b);
+
+    if (!is_equal_float(color.r, 1.6)) { return -1; }
+    if (!is_equal_float(color.g, 0.7)) { return -2; }
+    if (!is_equal_float(color.b, 1.0)) { return -3; }
+
+    return 1;
+}
+
+int test_subtract_colors()
+{
+    struct Color a = new_color(0.9, 0.6, 0.75);
+    struct Color b = new_color(0.7, 0.1, 0.25);
+    struct Color color = subtract_colors(a, b);
+
+    if (!is_equal_float(color.r, 0.2)) { return -1; }
+    if (!is_equal_float(color.g, 0.5)) { return -2; }
+    if (!is_equal_float(color.b, 0.5)) { return -3; }
+
+    return 1;
+}
+
+int test_mult_color_scalar()
+{
+    struct Color a = new_color(0.2, 0.3, 0.4);
+    struct Color color = mult_color_scalar(a, 2);
+
+    if (!is_equal_float(color.r, 0.4)) { return -1; }
+    if (!is_equal_float(color.g, 0.6)) { return -2; }
+    if (!is_equal_float(color.b, 0.8)) { return -3; }
+
+    return 1;
+}
+
+int test_mult_colors()
+{
+    struct Color a = new_color(1, 0.2, 0.4);
+    struct Color b = new_color(0.9, 1.0, 0.1);
+    struct Color color = mult_colors(a, b);
+
+    if (!is_equal_float(color.r, 0.9)) { return -1; }
+    if (!is_equal_float(color.g, 0.2)) { return -2; }
+    if (!is_equal_float(color.b, 0.04)) { return -3; }
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -441,6 +506,53 @@ int chapter_one_tests()
 
     result = test_projectile();
     // Result of test_projectile() is irrelevant; it's just an exercise
+
+    return 1;
+}
+
+int chapter_two_tests()
+{
+    int result = 0;
+
+    result = test_new_color();
+    if (result < 0) {
+        printf("test_new_color() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_new_color() passed.\n");
+    }
+
+    result = test_add_colors();
+    if (result < 0) {
+        printf("test_add_colors() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_add_colors() passed.\n");
+    }
+
+    result = test_subtract_colors();
+    if (result < 0) {
+        printf("test_subtract_colors() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_subtract_colors() passed.\n");
+    }
+
+    result = test_mult_color_scalar();
+    if (result < 0) {
+        printf("test_mult_color_scalar() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_mult_color_scalar() passed.\n");
+    }
+
+    result = test_mult_colors();
+    if (result < 0) {
+        printf("test_mult_colors() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_mult_colors() passed.\n");
+    }
 
     return 1;
 }
