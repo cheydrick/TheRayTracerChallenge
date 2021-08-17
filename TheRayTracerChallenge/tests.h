@@ -271,6 +271,34 @@ int test_cross_product()
     if (!is_equal_tuple(tuple, new_vector_tuple(1, -2, 1))) { return -2; }
 }
 
+// Chapter 1 "Putting It Together" exercise
+struct Projectile { struct Tuple position_point; struct Tuple velocity_vector; };
+struct Environment { struct Tuple gravity_vector; struct Tuple wind_vector; };
+
+struct Projectile tick(struct Environment env, struct Projectile proj)
+{
+    struct Projectile updated_proj;
+
+    updated_proj.position_point = add_tuples(proj.position_point, proj.velocity_vector);
+    updated_proj.velocity_vector = add_tuples(add_tuples(proj.velocity_vector, env.gravity_vector), env.wind_vector);
+
+    return updated_proj;
+}
+
+int test_projectile()
+{
+    struct Projectile p = { new_point_tuple(0, 1, 0), normalize_tuple(new_vector_tuple(1, 1, 0)) };
+    struct Environment e = { new_vector_tuple(0, -0.1, 0), new_vector_tuple(-0.01, 0, 0) };
+
+    while (p.position_point.y > 0)
+    {
+        printf("Projectile Y position: %f\n", p.position_point.y);
+        p = tick(e, p);
+    }
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -410,6 +438,9 @@ int chapter_one_tests()
     else {
         printf("test_cross_product() passed.\n");
     }
+
+    result = test_projectile();
+    // Result of test_projectile() is irrelevant; it's just an exercise
 
     return 1;
 }
