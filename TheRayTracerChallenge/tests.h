@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "tuple.h"
 #include "color.h"
+#include "canvas.h"
 #include "misc.h"
 
 // All tests return 1 for success, <0 for failure.
@@ -364,6 +365,50 @@ int test_mult_colors()
     return 1;
 }
 
+int test_new_canvas()
+{
+    struct Canvas canvas = new_canvas(10, 20);
+
+    if (canvas.canvas == NULL) { return -1; }
+    if (canvas.width != 10) { return -2; }
+    if (canvas.height != 20) { return -3; }
+
+    unsigned int canvas_array_length = canvas.width * canvas.height;
+
+    struct Color tmp_color;
+
+    for (int i = 0; i < canvas_array_length; i++)
+    {
+        tmp_color = canvas.canvas[i];
+        if (!is_equal_float(tmp_color.r, 0.0)) { return -4; }
+        if (!is_equal_float(tmp_color.g, 0.0)) { return -5; }
+        if (!is_equal_float(tmp_color.b, 0.0)) { return -6; }
+    }
+
+    free_canvas(&canvas);
+
+    if (canvas.canvas != NULL) { return -7; }
+
+    return 1;
+
+}
+
+int test_set_pixel()
+{
+    struct Canvas canvas = new_canvas(10, 20);
+    if (canvas.canvas == NULL) { return -1; }
+
+    struct Color red = new_color(1, 0, 0);
+
+    set_pixel(&canvas, 2, 3, red);
+    struct Color color = get_pixel(canvas, 2, 3);
+
+    if (!is_equal_color(red, color)) { return -2; }
+
+    free_canvas(&canvas);
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -570,6 +615,22 @@ int chapter_two_tests()
     }
     else {
         printf("test_mult_colors() passed.\n");
+    }
+
+    result = test_new_canvas();
+    if (result < 0) {
+        printf("test_new_canvas() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_new_canvas() passed.\n");
+    }
+
+    result = test_set_pixel();
+    if (result < 0) {
+        printf("test_set_pixel() failed with code: %i\n", result);
+    }
+    else {
+        printf("test_set_pixel() passed.\n");
     }
 
     return 1;
