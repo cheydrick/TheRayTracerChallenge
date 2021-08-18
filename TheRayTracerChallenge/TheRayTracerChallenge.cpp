@@ -5,10 +5,11 @@
 
 int main(int argc, char** argv)
 {
-    int result = 0;;
+    int result = 0;
+    int num_failed = 0;
 
-    result = chapter_one_tests();
-    if (result < 0) { printf("chapter_one_tests() failed.\n"); }
+    num_failed = chapter_one_tests();
+    if (num_failed > 0) { printf("%i chapter_one_tests() failed.\n", num_failed); }
     else { printf("chapter_one_tests() passed.\n"); }
 
     result = chapter_two_tests();

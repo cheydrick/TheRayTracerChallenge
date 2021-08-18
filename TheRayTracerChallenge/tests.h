@@ -367,10 +367,12 @@ int test_mult_colors()
 int chapter_one_tests()
 {
     int result = 0;
+    int num_failed = 0;
 
     result = test_is_equal_tuple();
     if (result < 0) {
         printf("test_is_equal_tuple() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_is_equal_tuple() passed.\n");
@@ -379,6 +381,7 @@ int chapter_one_tests()
     result = test_new_tuple_is_point();
     if (result < 0) {
         printf("test_new_tuple_is_point() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_new_tuple_is_point() passed.\n");
@@ -387,6 +390,7 @@ int chapter_one_tests()
     result = test_new_tuple_is_vector();
     if (result < 0) {
         printf("test_new_tuple_is_vector() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_new_tuple_is_vector() passed.\n");
@@ -395,6 +399,7 @@ int chapter_one_tests()
     result = test_new_point_tuple();
     if (result < 0) {
         printf("test_new_point_tuple() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_new_point_tuple() passed.\n");
@@ -403,6 +408,7 @@ int chapter_one_tests()
     result = test_new_vector_tuple();
     if (result < 0) {
         printf("test_new_vector_tuple() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_new_vector_tuple() passed.\n");
@@ -411,6 +417,7 @@ int chapter_one_tests()
     result = test_add_tuples();
     if (result < 0) {
         printf("test_add_tuples() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_add_tuples() passed.\n");
@@ -419,6 +426,7 @@ int chapter_one_tests()
     result = test_subtract_points();
     if (result < 0) {
         printf("test_subtract_points() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_subtract_points() passed.\n");
@@ -427,6 +435,7 @@ int chapter_one_tests()
     result = test_subtract_vector_from_point();
     if (result < 0) {
         printf("test_subtract_vector_from_point() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_subtract_vector_from_point() passed.\n");
@@ -435,6 +444,7 @@ int chapter_one_tests()
     result = test_subtract_vectors();
     if (result < 0) {
         printf("test_subtract_vectors() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_subtract_vectors() passed.\n");
@@ -443,6 +453,7 @@ int chapter_one_tests()
     result = test_subtract_vector_from_zero_vector();
     if (result < 0) {
         printf("test_subtract_vector_from_zero_vector() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_subtract_vector_from_zero_vector() passed.\n");
@@ -451,6 +462,7 @@ int chapter_one_tests()
     result = test_negate_tuple();
     if (result < 0) {
         printf("test_negate_tuple() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_negate_tuple() passed.\n");
@@ -459,6 +471,7 @@ int chapter_one_tests()
     result = test_mult_tuple_scalar();
     if (result < 0) {
         printf("test_mult_tuple_scalar() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_mult_tuple_scalar() passed.\n");
@@ -467,6 +480,7 @@ int chapter_one_tests()
     result = test_div_tuple_scalar();
     if (result < 0) {
         printf("test_div_tuple_scalar() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_div_tuple_scalar() passed.\n");
@@ -475,6 +489,7 @@ int chapter_one_tests()
     result = test_tuple_magnitude();
     if (result < 0) {
         printf("test_tuple_magnitude() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_tuple_magnitude() passed.\n");
@@ -483,6 +498,7 @@ int chapter_one_tests()
     result = test_normalize_tuple();
     if (result < 0) {
         printf("test_normalize_tuple() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_normalize_tuple() passed.\n");
@@ -491,6 +507,7 @@ int chapter_one_tests()
     result = test_dot_product();
     if (result < 0) {
         printf("test_tuple_dot_product() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_tuple_dot_product() passed.\n");
@@ -499,6 +516,7 @@ int chapter_one_tests()
     result = test_cross_product();
     if (result < 0) {
         printf("test_cross_product() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_cross_product() passed.\n");
@@ -507,7 +525,7 @@ int chapter_one_tests()
     result = test_projectile();
     // Result of test_projectile() is irrelevant; it's just an exercise
 
-    return 1;
+    return num_failed;
 }
 
 int chapter_two_tests()
