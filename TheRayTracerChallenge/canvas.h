@@ -56,3 +56,41 @@ void free_canvas(struct Canvas* canvas)
 		canvas->canvas = NULL;
 	}
 }
+
+struct Color get_pixel(struct Canvas canvas, unsigned int x, unsigned int y)
+{
+	if (canvas.canvas == NULL) { return new_color(1, 1, 1); }
+	if (x > (canvas.width - 1)) { return new_color(1, 1, 1); }
+	if (y > (canvas.height - 1)) { return new_color(1, 1, 1); }
+
+	unsigned int canvas_array_index = (y * canvas.width) + x;
+
+	return canvas.canvas[canvas_array_index];
+}
+
+int set_pixel(struct Canvas* canvas, unsigned int x, unsigned int y, struct Color color)
+{
+	if (canvas->canvas == NULL) { return -1; }
+	if (x > (canvas->width - 1)) { return -2; }
+	if (y > (canvas->height - 1)) { return -3; }
+
+	unsigned int canvas_array_index = (y * canvas->width) + x;
+
+	canvas->canvas[canvas_array_index] = color;
+
+	return 1;
+}
+
+int set_all_pixels(struct Canvas* canvas, struct Color color)
+{
+	int res = 0;
+	for (int y = 0; y < canvas->height; y++)
+	{
+		for (int x = 0; x < canvas->width; x++)
+		{
+			res = set_pixel(canvas, x, y, color);
+			if (res != 1) { return res; }
+		}
+	}
+	return 1;
+}
