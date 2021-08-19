@@ -409,6 +409,37 @@ int test_set_pixel()
     return 1;
 }
 
+int test_ppm_header()
+{
+    struct Canvas canvas = new_canvas(5, 3);
+    if (canvas.canvas == NULL) { return -1; }
+
+    // Write canvas to .ppm file
+    int res = write_ppm(canvas, "test_ppm_header.ppm");
+    if (res != 1) { return -2; }
+
+    // Construct expected .ppm header string
+    const char *expected_ppm_header = "P3\n5 3\n255\n";
+
+    // Read the .ppm file that was just written
+    int ppm_data_from_file_length = 0;
+    char* ppm_data_from_file = read_ppm("test_ppm_header.ppm", &ppm_data_from_file_length);
+
+    // Copy just the header of the read .ppm file
+    // First allocate a char array to fit the expected header (plus one extra length for terminating zero)
+    int ppm_header_length = strlen(expected_ppm_header);
+    char *ppm_header_from_file = (char*)malloc(ppm_header_length + 1);
+    memset(ppm_header_from_file, 0, ppm_header_length + 1);
+    // Copy just the header from the .ppm data read from the file
+    strncpy_s(ppm_header_from_file, ppm_header_length + 1, ppm_data_from_file, ppm_header_length);
+    // Compare the expected .ppm header to the one that was read from the created file
+    int compare = strncmp(expected_ppm_header, ppm_header_from_file, ppm_header_length);
+    if (compare != 0) { free(ppm_header_from_file); free(ppm_data_from_file); return -3; }
+
+    free(ppm_header_from_file);
+    free(ppm_data_from_file);
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -639,6 +670,15 @@ int chapter_two_tests()
     }
     else {
         printf("test_set_pixel() passed.\n");
+    }
+
+    result = test_ppm_header();
+    if (result < 0) {
+        printf("test_ppm_header() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_ppm_header() passed.\n");
     }
 
     return num_failed;

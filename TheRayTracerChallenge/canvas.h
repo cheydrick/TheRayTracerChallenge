@@ -94,3 +94,54 @@ int set_all_pixels(struct Canvas* canvas, struct Color color)
 	}
 	return 1;
 }
+
+int write_ppm(struct Canvas canvas, const char* filename)
+{
+	FILE* file;
+	errno_t err = fopen_s(&file, filename, "w");
+	if (err) { printf("Failed to open file %s\n", filename); return -1; }
+
+	// Generate and write the header
+	char header[64] = { 0 };
+	sprintf_s(header, 64, "P3\n%i %i\n255\n", canvas.width, canvas.height);
+	if (file != NULL) { fwrite(header, strlen(header), 1, file); }
+
+	// Write canvas data
+	// TBD
+	
+	// Write newline and close file
+	if (file != NULL) { fwrite("\n", 1, 1, file); }
+	if (file != NULL) { fclose(file); }
+	return 1;
+}
+
+char* read_ppm(const char* filename, int* buffer_size)
+{
+	FILE* file;
+	errno_t err = fopen_s(&file, filename, "r");
+	if (err) { printf("Failed to open file %s\n", filename); return NULL; }
+
+	// Get the file length
+	fseek(file, 0, SEEK_END);
+	int length = ftell(file);
+	fseek(file, 0, SEEK_SET);
+
+	char* buffer = (char*)malloc((size_t)length);
+	if (buffer == NULL)
+	{
+		printf("Couldn't allocate buffer in read_ppm()\n");
+		return NULL;
+	}
+	memset(buffer, 0, length);
+
+	int read = fread_s(buffer, length, 1, length, file);
+	if (read == 0)
+	{
+		printf("Zero bytes returned from read_ppm.\n");
+		free(buffer);
+		return NULL;
+	}
+	*buffer_size = read;
+	fclose(file);
+	return buffer;
+}
