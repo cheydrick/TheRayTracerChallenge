@@ -12,8 +12,7 @@ int main(int argc, char** argv)
     if (num_failed > 0) { printf("%i chapter_one_tests() failed.\n", num_failed); }
     else { printf("chapter_one_tests() passed.\n"); }
 
-    num_failed = 0;
-    result = chapter_two_tests();
-    if (result < 0) { printf("%i chapter_two_tests() failed.\n", num_failed); }
+    num_failed = chapter_two_tests();
+    if (num_failed > 0) { printf("%i chapter_two_tests() failed.\n", num_failed); }
     else { printf("chapter_two_tests() passed.\n"); }
 }

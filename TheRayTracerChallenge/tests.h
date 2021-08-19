@@ -440,6 +440,46 @@ int test_ppm_header()
     free(ppm_data_from_file);
 }
 
+int test_ppm_data()
+{
+    struct Canvas canvas = new_canvas(5, 3);
+    if (canvas.canvas == NULL) { return -1; }
+
+    struct Color c1 = new_color(1.5, 0, 0);
+    struct Color c2 = new_color(0, 0.5, 0);
+    struct Color c3 = new_color(-0.5, 0, 1);
+
+    set_pixel(&canvas, 0, 0, c1);
+    set_pixel(&canvas, 2, 1, c2);
+    set_pixel(&canvas, 4, 2, c3);
+
+    // Construct the expected ppm data
+    const char* expected_ppm_data_section = "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n";
+    int expected_ppm_data_section_length = strlen(expected_ppm_data_section);
+
+    // Write canvas to .ppm file
+    int res = write_ppm(canvas, "test_ppm_data.ppm");
+    if (res != 1) { return -2; }
+
+    // Read the .ppm file that was just written
+    int ppm_data_from_file_length = 0;
+    char* ppm_data_from_file = read_ppm("test_ppm_data.ppm", &ppm_data_from_file_length);
+
+    // Copy just the .ppm data section
+    char* ppm_data_section_from_file = (char*)malloc(expected_ppm_data_section_length + 1); // + 1 for the terminating zero
+    if (ppm_data_section_from_file == NULL) { return -3; }
+    memset(ppm_data_section_from_file, 0, expected_ppm_data_section_length + 1);
+    strncpy_s(ppm_data_section_from_file, expected_ppm_data_section_length + 1, ppm_data_from_file + strlen("P3\n5 3\n255\n"), expected_ppm_data_section_length);
+
+    // Compare the expected data to the data in the file
+    int compare = strncmp(expected_ppm_data_section, ppm_data_section_from_file, expected_ppm_data_section_length);
+    if (compare != 0) { return -4; }
+
+    free(ppm_data_section_from_file);
+    free(ppm_data_from_file);
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -679,6 +719,15 @@ int chapter_two_tests()
     }
     else {
         printf("test_ppm_header() passed.\n");
+    }
+
+    result = test_ppm_data();
+    if (result < 0) {
+        printf("test_ppm_data() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_ppm_data() passed.\n");
     }
 
     return num_failed;

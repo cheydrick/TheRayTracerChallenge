@@ -107,8 +107,36 @@ int write_ppm(struct Canvas canvas, const char* filename)
 	if (file != NULL) { fwrite(header, strlen(header), 1, file); }
 
 	// Write canvas data
-	// TBD
-	
+
+	int tmp_r = 0; int tmp_b = 0; int tmp_g = 0;
+	char tmp_data_r[8]; char tmp_data_g[8]; char tmp_data_b[8];
+
+	int canvas_index = 0;
+	for (int y = 0; y < canvas.height; y++)
+	{
+		for (int x = 0; x < canvas.width; x++)
+		{
+			tmp_r = (int)(roundf(canvas.canvas[canvas_index].r * 255.0)); if (tmp_r < 0) { tmp_r = 0; } if (tmp_r > 255) { tmp_r = 255; }
+			tmp_g = (int)(roundf(canvas.canvas[canvas_index].g * 255.0)); if (tmp_g < 0) { tmp_g = 0; } if (tmp_g > 255) { tmp_g = 255; }
+			tmp_b = (int)(roundf(canvas.canvas[canvas_index].b * 255.0)); if (tmp_b < 0) { tmp_b = 0; } if (tmp_b > 255) { tmp_b = 255; }
+
+			sprintf_s(tmp_data_r, 8, "%i", tmp_r);
+			sprintf_s(tmp_data_g, 8, "%i", tmp_g);
+			sprintf_s(tmp_data_b, 8, "%i", tmp_b);
+
+			fwrite(tmp_data_r, strlen(tmp_data_r), 1, file);
+			fwrite(" ", 1, 1, file);
+			fwrite(tmp_data_g, strlen(tmp_data_g), 1, file);
+			fwrite(" ", 1, 1, file);
+			fwrite(tmp_data_b, strlen(tmp_data_b), 1, file);
+			if (x != canvas.width - 1) { fwrite(" ", 1, 1, file); }
+			// Handle end-of-line
+
+			canvas_index++;
+		}
+		fwrite("\n", 1, 1, file);
+	}
+
 	// Write newline and close file
 	if (file != NULL) { fwrite("\n", 1, 1, file); }
 	if (file != NULL) { fclose(file); }
