@@ -576,10 +576,12 @@ int chapter_one_tests()
 int chapter_two_tests()
 {
     int result = 0;
+    int num_failed = 0;
 
     result = test_new_color();
     if (result < 0) {
         printf("test_new_color() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_new_color() passed.\n");
@@ -588,6 +590,7 @@ int chapter_two_tests()
     result = test_add_colors();
     if (result < 0) {
         printf("test_add_colors() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_add_colors() passed.\n");
@@ -596,6 +599,7 @@ int chapter_two_tests()
     result = test_subtract_colors();
     if (result < 0) {
         printf("test_subtract_colors() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_subtract_colors() passed.\n");
@@ -604,6 +608,7 @@ int chapter_two_tests()
     result = test_mult_color_scalar();
     if (result < 0) {
         printf("test_mult_color_scalar() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_mult_color_scalar() passed.\n");
@@ -612,6 +617,7 @@ int chapter_two_tests()
     result = test_mult_colors();
     if (result < 0) {
         printf("test_mult_colors() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_mult_colors() passed.\n");
@@ -620,6 +626,7 @@ int chapter_two_tests()
     result = test_new_canvas();
     if (result < 0) {
         printf("test_new_canvas() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_new_canvas() passed.\n");
@@ -628,10 +635,11 @@ int chapter_two_tests()
     result = test_set_pixel();
     if (result < 0) {
         printf("test_set_pixel() failed with code: %i\n", result);
+        num_failed++;
     }
     else {
         printf("test_set_pixel() passed.\n");
     }
 
-    return 1;
+    return num_failed;
 }
