@@ -106,34 +106,41 @@ int write_ppm(struct Canvas canvas, const char* filename)
 	sprintf_s(header, 64, "P3\n%i %i\n255\n", canvas.width, canvas.height);
 	if (file != NULL) { fwrite(header, strlen(header), 1, file); }
 
-	// Write canvas data
-
+	// Storage for RGB values converted from 0.0-1.0 to 0-255
 	int tmp_r = 0; int tmp_b = 0; int tmp_g = 0;
+	// Storage for converting RGB values to text prior to being written
 	char tmp_data_r[8]; char tmp_data_g[8]; char tmp_data_b[8];
-
+	// Index value for Canvas.canvas array of Color structs
 	int canvas_index = 0;
+	
+	// Go through each Canvas.canvas Color struct and write RGB data in PPM format
 	for (int y = 0; y < canvas.height; y++)
 	{
 		for (int x = 0; x < canvas.width; x++)
 		{
+			// Convert RGB values from 0.0-1.0 to 0-255, clamping when necessary
 			tmp_r = (int)(roundf(canvas.canvas[canvas_index].r * 255.0)); if (tmp_r < 0) { tmp_r = 0; } if (tmp_r > 255) { tmp_r = 255; }
 			tmp_g = (int)(roundf(canvas.canvas[canvas_index].g * 255.0)); if (tmp_g < 0) { tmp_g = 0; } if (tmp_g > 255) { tmp_g = 255; }
 			tmp_b = (int)(roundf(canvas.canvas[canvas_index].b * 255.0)); if (tmp_b < 0) { tmp_b = 0; } if (tmp_b > 255) { tmp_b = 255; }
 
+			// Convert RGB values to char array
 			sprintf_s(tmp_data_r, 8, "%i", tmp_r);
 			sprintf_s(tmp_data_g, 8, "%i", tmp_g);
 			sprintf_s(tmp_data_b, 8, "%i", tmp_b);
 
+			// Write RGB data to disk
 			fwrite(tmp_data_r, strlen(tmp_data_r), 1, file);
 			fwrite(" ", 1, 1, file);
 			fwrite(tmp_data_g, strlen(tmp_data_g), 1, file);
 			fwrite(" ", 1, 1, file);
 			fwrite(tmp_data_b, strlen(tmp_data_b), 1, file);
+			
+			// If Color being written is the last one in the row, don't write a space. Otherwise, do.
 			if (x != canvas.width - 1) { fwrite(" ", 1, 1, file); }
-			// Handle end-of-line
 
 			canvas_index++;
 		}
+		// If Color being written is the last one, don't write an extra newline. Otherwise, do.
 		if (y != canvas.height - 1) { fwrite("\n", 1, 1, file); }
 	}
 
