@@ -462,21 +462,57 @@ int test_ppm_data()
     if (res != 1) { return -2; }
 
     // Read the .ppm file that was just written
-    int ppm_data_from_file_length = 0;
-    char* ppm_data_from_file = read_ppm("test_ppm_data.ppm", &ppm_data_from_file_length);
+    int ppm_from_file_length = 0;
+    char* ppm_from_file = read_ppm("test_ppm_data.ppm", &ppm_from_file_length);
 
     // Copy just the .ppm data section
     char* ppm_data_section_from_file = (char*)malloc(expected_ppm_data_section_length + 1); // + 1 for the terminating zero
     if (ppm_data_section_from_file == NULL) { return -3; }
     memset(ppm_data_section_from_file, 0, expected_ppm_data_section_length + 1);
-    strncpy_s(ppm_data_section_from_file, expected_ppm_data_section_length + 1, ppm_data_from_file + strlen("P3\n5 3\n255\n"), expected_ppm_data_section_length);
+    strncpy_s(ppm_data_section_from_file, expected_ppm_data_section_length + 1, ppm_from_file + strlen("P3\n5 3\n255\n"), expected_ppm_data_section_length);
 
     // Compare the expected data to the data in the file
     int compare = strncmp(expected_ppm_data_section, ppm_data_section_from_file, expected_ppm_data_section_length);
     if (compare != 0) { return -4; }
 
     free(ppm_data_section_from_file);
-    free(ppm_data_from_file);
+    free(ppm_from_file);
+    return 1;
+}
+
+int test_ppm_data_long()
+{
+    struct Canvas canvas = new_canvas(5, 3);
+    if (canvas.canvas == NULL) { return -1; }
+
+    struct Color c1 = new_color(1, 0.8, 0.6);
+
+    set_all_pixels(&canvas, c1);
+
+    // Construct the expected ppm data
+    const char* expected_ppm_data_section = "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204\n153 255 204 153 255 204 153 255 204 153 255 204 153\n255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204\n153 255 204 153 255 204 153 255 204 153 255 204 153\n";
+    int expected_ppm_data_section_length = strlen(expected_ppm_data_section);
+
+    // Write the canvas to .ppm file
+    int res = write_ppm(canvas, "test_ppm_data_long.ppm");
+    if (res != 1) { return -2; }
+
+    // Read the .ppm file that was just written
+    int ppm_from_file_length = 0;
+    char* ppm_from_file = read_ppm("test_ppm_data_long.ppm", &ppm_from_file_length);
+
+    // Copy just the .ppm data section
+    char* ppm_data_section_from_file = (char*)malloc(expected_ppm_data_section_length + 1); // + 1 for the terminating zero
+    if (ppm_data_section_from_file == NULL) { return -3; }
+    memset(ppm_data_section_from_file, 0, expected_ppm_data_section_length + 1);
+    strncpy_s(ppm_data_section_from_file, expected_ppm_data_section_length + 1, ppm_from_file + strlen("P3\n10 2\n255\n"), expected_ppm_data_section_length);
+
+    // Compare the expected data to the data in the file
+    int compare = strncmp(expected_ppm_data_section, ppm_data_section_from_file, expected_ppm_data_section_length);
+    if (compare != 0) { return -4; }
+
+    free(ppm_data_section_from_file);
+    free(ppm_from_file);
     return 1;
 }
 
@@ -728,6 +764,15 @@ int chapter_two_tests()
     }
     else {
         printf("test_ppm_data() passed.\n");
+    }
+
+    result = test_ppm_data_long();
+    if (result < 0) {
+        printf("test_ppm_data_long() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_ppm_data_long() passed.\n");
     }
 
     return num_failed;
