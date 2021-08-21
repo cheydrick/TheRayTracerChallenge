@@ -3,14 +3,14 @@ My implementation of the ray tracer described in The Ray Tracer Challenge by Jam
 
 
 # To Do
-- [ ] Chapter One: Tuples, Points, and Vectors
+- [x] Chapter One: Tuples, Points, and Vectors
   - [x] Tuples
   - [x] Operations
-  - [ ] Putting It Together
+  - [x] Putting It Together
 - [ ] Chapter 2: Drawing on a Canvas
-  - [ ] Representing Colors
-  - [ ] Implementing Color Operations
-  - [ ] Creating a Canvas
+  - [x] Representing Colors
+  - [x] Implementing Color Operations
+  - [x] Creating a Canvas
   - [ ] Saving a Canvas
   - [ ] Putting It Together
 - [ ] Chapter 3: Matrices
