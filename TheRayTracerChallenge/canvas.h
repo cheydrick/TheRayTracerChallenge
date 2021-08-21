@@ -134,7 +134,7 @@ int write_ppm(struct Canvas canvas, const char* filename)
 
 			canvas_index++;
 		}
-		fwrite("\n", 1, 1, file);
+		if (y != canvas.height - 1) { fwrite("\n", 1, 1, file); }
 	}
 
 	// Write newline and close file

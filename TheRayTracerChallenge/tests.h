@@ -482,7 +482,7 @@ int test_ppm_data()
 
 int test_ppm_data_long()
 {
-    struct Canvas canvas = new_canvas(5, 3);
+    struct Canvas canvas = new_canvas(10, 2);
     if (canvas.canvas == NULL) { return -1; }
 
     struct Color c1 = new_color(1, 0.8, 0.6);
