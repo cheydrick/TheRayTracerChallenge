@@ -112,6 +112,8 @@ int write_ppm(struct Canvas canvas, const char* filename)
 	char tmp_data_r[8]; char tmp_data_g[8]; char tmp_data_b[8]; char tmp_data_rgb[24];
 	// Index value for Canvas.canvas array of Color structs
 	int canvas_index = 0;
+
+	int line_char_length = 0;
 	
 	// Go through each Canvas.canvas Color struct and write RGB data in PPM format
 	for (int y = 0; y < canvas.height; y++)
@@ -137,10 +139,14 @@ int write_ppm(struct Canvas canvas, const char* filename)
 			// If Color being written is the last one in the row, don't write a space. Otherwise, do.
 			if (x != canvas.width - 1) { offset += sprintf_s(tmp_data_rgb + offset, tmp_data_rgb_len - offset, "%s", " "); }
 
+			if (line_char_length + strlen(tmp_data_rgb) > 70) { fwrite("\n", 1, 1, file); line_char_length = 0; }
+			else { line_char_length += strlen(tmp_data_rgb); }
+			
 			fwrite(tmp_data_rgb, strlen(tmp_data_rgb), 1, file);
 
 			canvas_index++;
 		}
+		line_char_length = 0;
 		// If Color being written is the last one, don't write an extra newline. Otherwise, do.
 		if (y != canvas.height - 1) { fwrite("\n", 1, 1, file); }
 	}
