@@ -56,3 +56,19 @@ float get_matrix_element(struct Matrix* matrix, unsigned int row, unsigned int c
 	if (matrix->elements != NULL) { *error = 1;  return matrix->elements[offset]; }
 	else { *error = -4; return -5; }
 }
+
+struct Matrix new_matrix_4x4(float* values)
+{
+	struct Matrix m = new_matrix(4, 4);
+	int index = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			set_matrix_element(&m, i, j, values[index]);
+			index++;
+		}
+	}
+
+	return m;
+}
