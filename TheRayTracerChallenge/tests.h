@@ -539,6 +539,22 @@ int test_4x4_matrix()
     return 1;
 }
 
+int test_2x2_matrix()
+{
+    Matrix m = new_matrix(2, 2);
+    set_matrix_element(&m, 0, 0, -3); set_matrix_element(&m, 0, 1, 5); 
+    set_matrix_element(&m, 1, 0, 1); set_matrix_element(&m, 1, 1, -2);
+
+    float elem = 0; int error = 0;
+    if (!is_equal_float(-3, get_matrix_element(&m, 0, 0, &error))) { return -1; }
+    if (!is_equal_float(5, get_matrix_element(&m, 0, 1, &error))) { return -2; }
+    if (!is_equal_float(1, get_matrix_element(&m, 1, 0, &error))) { return -3; }
+    if (!is_equal_float(-2, get_matrix_element(&m, 1, 1, &error))) { return -4; }
+
+    free_matrix(&m);
+    return 1;
+}
+
 int test_new_matrix_4x4()
 {
     float values[16] = { 1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 9, 10, 11, 12, 13.5, 14.5, 15.5, 16.5 };
@@ -552,6 +568,21 @@ int test_new_matrix_4x4()
     if (!is_equal_float(11, get_matrix_element(&m, 2, 2, &error))) { return -5; }
     if (!is_equal_float(13.5, get_matrix_element(&m, 3, 0, &error))) { return -6; }
     if (!is_equal_float(15.5, get_matrix_element(&m, 3, 2, &error))) { return -7; }
+
+    free_matrix(&m);
+    return 1;
+}
+
+int test_new_matrix_2x2()
+{
+    float values[16] = { -3, 5, 1, -2 };
+    Matrix m = new_matrix_2x2(values);
+
+    float elem = 0; int error = 0;
+    if (!is_equal_float(-3, get_matrix_element(&m, 0, 0, &error))) { return -1; }
+    if (!is_equal_float(5, get_matrix_element(&m, 0, 1, &error))) { return -2; }
+    if (!is_equal_float(1, get_matrix_element(&m, 1, 0, &error))) { return -3; }
+    if (!is_equal_float(-2, get_matrix_element(&m, 1, 1, &error))) { return -4; }
 
     free_matrix(&m);
     return 1;
@@ -840,6 +871,24 @@ int chapter_three_tests()
     }
     else {
         printf("test_new_matrix_4x4() passed.\n");
+    }
+
+    result = test_2x2_matrix();
+    if (result < 0) {
+        printf("test_2x2_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_2x2_matrix() passed.\n");
+    }
+
+    result = test_new_matrix_2x2();
+    if (result < 0) {
+        printf("test_new_matrix_2x2() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_new_matrix_2x2() passed.\n");
     }
 
     return num_failed;

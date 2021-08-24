@@ -72,3 +72,19 @@ struct Matrix new_matrix_4x4(float* values)
 
 	return m;
 }
+
+struct Matrix new_matrix_2x2(float* values)
+{
+	struct Matrix m = new_matrix(2, 2);
+	int index = 0;
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			set_matrix_element(&m, i, j, values[index]);
+			index++;
+		}
+	}
+
+	return m;
+}
