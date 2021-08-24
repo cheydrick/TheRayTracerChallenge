@@ -3,6 +3,7 @@
 #include "tuple.h"
 #include "color.h"
 #include "canvas.h"
+#include "matrix.h"
 #include "misc.h"
 
 // All tests return 1 for success, <0 for failure.
@@ -516,6 +517,29 @@ int test_ppm_data_long()
     return 1;
 }
 
+// Chapter 3 Tests
+int test_4x4_matrix()
+{
+    Matrix m = new_matrix(4, 4);
+    set_matrix_element(&m, 0, 0, 1); set_matrix_element(&m, 0, 1, 2); set_matrix_element(&m, 0, 2, 3); set_matrix_element(&m, 0, 3, 4);
+    set_matrix_element(&m, 1, 0, 5.5); set_matrix_element(&m, 1, 1, 6.5); set_matrix_element(&m, 1, 2, 7.5); set_matrix_element(&m, 1, 3, 8.5);
+    set_matrix_element(&m, 2, 0, 9); set_matrix_element(&m, 2, 1, 10); set_matrix_element(&m, 2, 2, 11); set_matrix_element(&m, 2, 3, 12);
+    set_matrix_element(&m, 3, 0, 13.5); set_matrix_element(&m, 3, 1, 14.5); set_matrix_element(&m, 3, 2, 15.5); set_matrix_element(&m, 3, 3, 16.5);
+
+    float elem = 0; int error = 0;
+    if (!is_equal_float(1, get_matrix_element(&m, 0, 0, &error))) { return -1; }
+    if (!is_equal_float(4, get_matrix_element(&m, 0, 3, &error))) { return -2; }
+    if (!is_equal_float(5.5, get_matrix_element(&m, 1, 0, &error))) { return -3; }
+    if (!is_equal_float(7.5, get_matrix_element(&m, 1, 2, &error))) { return -4; }
+    if (!is_equal_float(11, get_matrix_element(&m, 2, 2, &error))) { return -5; }
+    if (!is_equal_float(13.5, get_matrix_element(&m, 3, 0, &error))) { return -6; }
+    if (!is_equal_float(15.5, get_matrix_element(&m, 3, 2, &error))) { return -7; }
+
+    free_matrix(&m);
+    return 1;
+}
+
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -773,6 +797,23 @@ int chapter_two_tests()
     }
     else {
         printf("test_ppm_data_long() passed.\n");
+    }
+
+    return num_failed;
+}
+
+int chapter_three_tests()
+{
+    int result = 0;
+    int num_failed = 0;
+
+    result = test_4x4_matrix();
+    if (result < 0) {
+        printf("test_4x4_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_4x4_matrix() passed.\n");
     }
 
     return num_failed;

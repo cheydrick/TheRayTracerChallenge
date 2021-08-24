@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="canvas.h" />
     <ClInclude Include="color.h" />
+    <ClInclude Include="matrix.h" />
     <ClInclude Include="misc.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="tuple.h" />
