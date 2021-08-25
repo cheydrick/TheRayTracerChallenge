@@ -69,6 +69,15 @@ struct Matrix new_matrix_4x4(float* values)
 	return m;
 }
 
+struct Matrix new_matrix_4x4_identity()
+{
+	float identity_values[16] = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
+
+	struct Matrix m = new_matrix_4x4(identity_values);
+
+	return m;
+}
+
 struct Matrix new_matrix_2x2(float* values)
 {
 	struct Matrix m = new_matrix(2, 2);

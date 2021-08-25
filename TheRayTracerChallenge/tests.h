@@ -661,6 +661,9 @@ int test_mult_4x4_matrices()
     if (error != 1) { return -1; }
     if (is_equal_matrix(4, 4, &P, &T) != 1) { return -2; }
 
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&P);
     return 1;
 }
 
@@ -679,6 +682,26 @@ int test_mult_4x4_matrix_tuple()
     if (P.z != 33) { return -3; }
     if (P.w != 1) { return -4; }
 
+    free_matrix(&A);
+    return 1;
+}
+
+int test_new_matrix_4x4_identity()
+{
+    float a_values[16] = { 0,1,2,4,1,2,4,8,2,4,8,16,4,8,16,32 };
+    Matrix A = new_matrix_4x4(a_values);
+    Matrix I = new_matrix_4x4_identity();
+
+    int error = 0;
+    Matrix P = mult_4x4_matrices(&A, &I, &error);
+
+    int comp = is_equal_matrix(4, 4, &A, &P);
+
+    if (comp != 1) { return -1; }
+
+    free_matrix(&A);
+    free_matrix(&I);
+    free_matrix(&P);
     return 1;
 }
 
@@ -1019,6 +1042,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_mult_4x4_matrix_tuple() passed.\n");
+    }
+
+    result = test_new_matrix_4x4_identity();
+    if (result < 0) {
+        printf("test_new_matrix_4x4_identity() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_new_matrix_4x4_identity() passed.\n");
     }
 
     return num_failed;
