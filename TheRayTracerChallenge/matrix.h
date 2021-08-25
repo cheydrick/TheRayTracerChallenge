@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <string.h>
+#include "tuple.h"
 #include "misc.h"
 
 struct Matrix
@@ -141,6 +142,20 @@ struct Matrix mult_4x4_matrices(struct Matrix* A, struct Matrix* B, int *error)
 	}
 	*error = 1;
 	return p;
+}
+
+struct Tuple mult_4x4_matrix_tuple(struct Matrix* A, struct Tuple* B, int *error)
+{
+	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return new_tuple(0,0,0,0); }
+	
+	float x = 0; float y = 0; float z = 0; float w = 0;
+
+	x = (A->elements[0] * B->x) + (A->elements[1] * B->y) + (A->elements[2] * B->z) + (A->elements[3] * B->w);
+	y = (A->elements[4] * B->x) + (A->elements[5] * B->y) + (A->elements[6] * B->z) + (A->elements[7] * B->w);
+	z = (A->elements[8] * B->x) + (A->elements[9] * B->y) + (A->elements[10] * B->z) + (A->elements[11] * B->w);
+	w = (A->elements[12] * B->x) + (A->elements[13] * B->y) + (A->elements[14] * B->z) + (A->elements[15] * B->w);
+
+	return new_tuple(x, y, z, w);
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)

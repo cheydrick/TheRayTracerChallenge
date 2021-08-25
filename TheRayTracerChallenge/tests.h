@@ -664,6 +664,24 @@ int test_mult_4x4_matrices()
     return 1;
 }
 
+int test_mult_4x4_matrix_tuple()
+{
+    float a_values[16] = { 1,2,3,4,2,4,4,2,8,6,4,1,0,0,0,1 };
+
+    Matrix A = new_matrix_4x4(a_values);
+    Tuple B = new_tuple(1, 2, 3, 1);
+
+    int error = 0;
+    Tuple P = mult_4x4_matrix_tuple(&A, &B, &error);
+
+    if (P.x != 18) { return -1; }
+    if (P.y != 24) { return -2; }
+    if (P.z != 33) { return -3; }
+    if (P.w != 1) { return -4; }
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -992,6 +1010,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_mult_4x4_matrices() passed.\n");
+    }
+
+    result = test_mult_4x4_matrix_tuple();
+    if (result < 0) {
+        printf("test_mult_4x4_matrix_tuple() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_mult_4x4_matrix_tuple() passed.\n");
     }
 
     return num_failed;
