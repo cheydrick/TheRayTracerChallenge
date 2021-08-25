@@ -555,6 +555,22 @@ int test_2x2_matrix()
     return 1;
 }
 
+int test_3x3_matrix()
+{
+    Matrix m = new_matrix(3, 3);
+    set_matrix_element(&m, 0, 0, -3); set_matrix_element(&m, 0, 1, 5); set_matrix_element(&m, 0, 2, 0);
+    set_matrix_element(&m, 1, 0, 1); set_matrix_element(&m, 1, 1, -2); set_matrix_element(&m, 1, 2, -7);
+    set_matrix_element(&m, 2, 0, 0); set_matrix_element(&m, 2, 1, 1); set_matrix_element(&m, 2, 2, 1);
+
+    float elem = 0; int error = 0;
+    if (!is_equal_float(-3, get_matrix_element(&m, 0, 0, &error))) { return -1; }
+    if (!is_equal_float(-2, get_matrix_element(&m, 1, 1, &error))) { return -2; }
+    if (!is_equal_float(1, get_matrix_element(&m, 2, 2, &error))) { return -3; }
+
+    free_matrix(&m);
+    return 1;
+}
+
 int test_new_matrix_4x4()
 {
     float values[16] = { 1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 9, 10, 11, 12, 13.5, 14.5, 15.5, 16.5 };
@@ -585,6 +601,66 @@ int test_new_matrix_2x2()
     if (!is_equal_float(-2, get_matrix_element(&m, 1, 1, &error))) { return -4; }
 
     free_matrix(&m);
+    return 1;
+}
+
+int test_new_matrix_3x3()
+{
+    float values[16] = { -3, 5, 0, 1, -2, -7, 0, 1, 1 };
+    Matrix m = new_matrix_3x3(values);
+
+    float elem = 0; int error = 0;
+    if (!is_equal_float(-3, get_matrix_element(&m, 0, 0, &error))) { return -1; }
+    if (!is_equal_float(-2, get_matrix_element(&m, 1, 1, &error))) { return -2; }
+    if (!is_equal_float(1, get_matrix_element(&m, 2, 2, &error))) { return -3; }
+
+    free_matrix(&m);
+    return 1;
+}
+
+int test_is_equal_matrix()
+{
+    float a_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
+    float b_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
+
+    Matrix A = new_matrix_4x4(a_values);
+    Matrix B = new_matrix_4x4(b_values);
+
+    if (is_equal_matrix(4, 4, &A, &B) != 1) { return -1; }
+
+    free_matrix(&A);
+    free_matrix(&B);
+
+    float c_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
+    float d_values[16] = { 2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1 };
+
+    Matrix C = new_matrix_4x4(c_values);
+    Matrix D = new_matrix_4x4(d_values);
+
+    if (is_equal_matrix(4, 4, &C, &D) != 0) { return -2; }
+
+    free_matrix(&C);
+    free_matrix(&D);
+
+    return 1;
+}
+
+int test_mult_4x4_matrices()
+{
+    float a_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
+    float b_values[16] = { -2,1,2,3,3,2,1,-1,4,3,6,5,1,2,7,8 };
+    float p_values[16] = { 20,22,50,48,44,54,114,108,40,58,110,102,16,26,46,42 };
+
+    Matrix A = new_matrix_4x4(a_values);
+    Matrix B = new_matrix_4x4(b_values);
+    Matrix P = new_matrix_4x4(p_values);
+
+    int error = 0;
+    Matrix T = mult_4x4_matrices(&A, &B, &error);
+
+    if (error != 1) { return -1; }
+    if (is_equal_matrix(4, 4, &P, &T) != 1) { return -2; }
+
     return 1;
 }
 
@@ -889,6 +965,33 @@ int chapter_three_tests()
     }
     else {
         printf("test_new_matrix_2x2() passed.\n");
+    }
+
+    result = test_3x3_matrix();
+    if (result < 0) {
+        printf("test_3x3_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_3x3_matrix() passed.\n");
+    }
+
+    result = test_is_equal_matrix();
+    if (result < 0) {
+        printf("test_is_equal_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_is_equal_matrix() passed.\n");
+    }
+
+    result = test_mult_4x4_matrices();
+    if (result < 0) {
+        printf("test_mult_4x4_matrices() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_mult_4x4_matrices() passed.\n");
     }
 
     return num_failed;

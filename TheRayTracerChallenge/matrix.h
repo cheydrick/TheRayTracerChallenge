@@ -10,11 +10,6 @@ struct Matrix
 	unsigned int cols;
 };
 
-void debug_print_matrix(unsigned int rows, unsigned int cols)
-{
-	//
-}
-
 struct Matrix new_matrix(unsigned int rows, unsigned int cols)
 {
 	struct Matrix m;
@@ -87,4 +82,76 @@ struct Matrix new_matrix_2x2(float* values)
 	}
 
 	return m;
+}
+
+struct Matrix new_matrix_3x3(float* values)
+{
+	struct Matrix m = new_matrix(3, 3);
+	int index = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			set_matrix_element(&m, i, j, values[index]);
+			index++;
+		}
+	}
+
+	return m;
+}
+
+int is_equal_matrix(unsigned int rows, unsigned int cols, struct Matrix* A, struct Matrix* B)
+{
+	if ((A->rows != rows) || (A->cols != cols) || (B->rows != rows) || (B->cols != cols)) { return -1; }
+
+	int index = 0;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			if (!is_equal_float(A->elements[index], B->elements[index])) { return 0; }
+			index++;
+		}
+	}
+
+	return 1;
+}
+
+struct Matrix mult_4x4_matrices(struct Matrix* A, struct Matrix* B, int *error)
+{
+	struct Matrix p = new_matrix(4, 4);
+
+	if ((A->rows != 4) || (A->cols != 4) || (B->rows != 4) || (B->cols != 4)) { *error = -1;  return p; }
+
+	float tmp_prod = 0;
+	int err = 0;
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			tmp_prod += get_matrix_element(A, i, 0, &err) * get_matrix_element(B, 0, j, &err);
+			tmp_prod += get_matrix_element(A, i, 1, &err) * get_matrix_element(B, 1, j, &err);
+			tmp_prod += get_matrix_element(A, i, 2, &err) * get_matrix_element(B, 2, j, &err);
+			tmp_prod += get_matrix_element(A, i, 3, &err) * get_matrix_element(B, 3, j, &err);
+
+			set_matrix_element(&p, i, j, tmp_prod);
+			tmp_prod = 0;
+		}
+	}
+	*error = 1;
+	return p;
+}
+
+void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
+{
+	int error = 0;
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			printf("%f ", get_matrix_element(A, i, j, &error));
+		}
+		printf("\n");
+	}
 }
