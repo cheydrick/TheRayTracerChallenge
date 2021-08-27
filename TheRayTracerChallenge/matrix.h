@@ -182,6 +182,14 @@ struct Matrix transpose_4x4_matrix(struct Matrix* A, int *error)
 	return new_matrix_4x4(t_values);
 }
 
+float det_2x2_matrix(struct Matrix *A, int *error)
+{
+	if ((A->rows != 2) || (A->cols != 2)) { *error = -1;  return 0; }
+
+	*error = 1;
+	return ((A->elements[0] * A->elements[3]) - (A->elements[1] * A->elements[2]));
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;

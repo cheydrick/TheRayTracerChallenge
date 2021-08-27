@@ -725,6 +725,19 @@ int test_transpose_4x4_matrix()
     return 1;
 }
 
+int test_det_2x2_matrix()
+{
+    float a_values[4] = { 1,5,-3,2 };
+
+    Matrix A = new_matrix_2x2(a_values);
+
+    int error = 0;
+    float det = det_2x2_matrix(&A, &error);
+
+    if (!is_equal_float(det, 17)) { return -1; }
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1080,6 +1093,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_transpose_4x4_matrix() passed.\n");
+    }
+
+    result = test_det_2x2_matrix();
+    if (result < 0) {
+        printf("test_det_2x2_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_det_2x2_matrix() passed.\n");
     }
 
     return num_failed;
