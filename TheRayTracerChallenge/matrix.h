@@ -190,6 +190,22 @@ float det_2x2_matrix(struct Matrix *A, int *error)
 	return ((A->elements[0] * A->elements[3]) - (A->elements[1] * A->elements[2]));
 }
 
+struct Matrix submatrix_3x3(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+{
+	float b_values[4]= { 0,0,0,0 };
+	
+	if ((A->rows != 3) || (A->cols != 3)) { *error = -1;  return new_matrix_2x2(b_values); }
+	if (row == 1 || col == 1) { *error = -2;  return new_matrix_2x2(b_values); }
+
+	if (row == 2 && col == 2) { b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3]; b_values[3] = A->elements[4]; }
+	if (row == 2 && col == 0) { b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[4]; b_values[3] = A->elements[5]; }
+	if (row == 0 && col == 2) { b_values[0] = A->elements[3]; b_values[1] = A->elements[4]; b_values[2] = A->elements[6]; b_values[3] = A->elements[7]; }
+	if (row == 0 && col == 0) { b_values[0] = A->elements[4]; b_values[1] = A->elements[5]; b_values[2] = A->elements[7]; b_values[3] = A->elements[8]; }
+
+	*error = 1;
+	return new_matrix_2x2(b_values);
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;

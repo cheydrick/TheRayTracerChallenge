@@ -738,6 +738,20 @@ int test_det_2x2_matrix()
     return 1;
 }
 
+int test_submatrix_3x3()
+{
+    float a_values[9] = { 1,5,0,-3,2,7,0,6,-3 };
+    struct Matrix A = new_matrix_3x3(a_values);
+    float b_values[4] = { -3,2,0,6 };
+    struct Matrix B = new_matrix_2x2(b_values);
+    
+    int error = 0;
+    struct Matrix S = submatrix_3x3(&A, 0, 2, &error);
+
+    if (!is_equal_matrix(2, 2, &B, &S)) { return -1; }
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1102,6 +1116,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_det_2x2_matrix() passed.\n");
+    }
+
+    result = test_submatrix_3x3();
+    if (result < 0) {
+        printf("test_submatrix_3x3() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_submatrix_3x3() passed.\n");
     }
 
     return num_failed;
