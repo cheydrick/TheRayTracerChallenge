@@ -167,6 +167,21 @@ struct Tuple mult_4x4_matrix_tuple(struct Matrix* A, struct Tuple* B, int *error
 	return new_tuple(x, y, z, w);
 }
 
+struct Matrix transpose_4x4_matrix(struct Matrix* A, int *error)
+{
+	float t_values[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
+	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return new_matrix_4x4(t_values); }
+	
+	t_values[0] = A->elements[0]; t_values[1] = A->elements[4]; t_values[2] = A->elements[8]; t_values[3] = A->elements[12];
+	t_values[4] = A->elements[1]; t_values[5] = A->elements[5]; t_values[6] = A->elements[9]; t_values[7] = A->elements[13];
+	t_values[8] = A->elements[2]; t_values[9] = A->elements[6]; t_values[10] = A->elements[10]; t_values[11] = A->elements[14];
+	t_values[12] = A->elements[3]; t_values[13] = A->elements[7]; t_values[14] = A->elements[11]; t_values[15] = A->elements[15];
+
+	*error = 1;
+	return new_matrix_4x4(t_values);
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;

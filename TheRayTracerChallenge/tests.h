@@ -705,6 +705,26 @@ int test_new_matrix_4x4_identity()
     return 1;
 }
 
+int test_transpose_4x4_matrix()
+{
+    float a_values[16] = { 0,9,3,0,9,8,0,8,1,8,5,3,0,0,5,8 };
+    float b_values[16] = { 0,9,1,0,9,8,8,0,3,0,5,5,0,8,3,8 };
+    Matrix A = new_matrix_4x4(a_values);
+    Matrix B = new_matrix_4x4(b_values);
+    
+    int error = 0;
+    Matrix T = transpose_4x4_matrix(&A, &error);
+    int comp = is_equal_matrix(4, 4, &B, &T);
+
+    if (comp != 1) { return -1; }
+
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&T);
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1051,6 +1071,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_new_matrix_4x4_identity() passed.\n");
+    }
+
+    result = test_transpose_4x4_matrix();
+    if (result < 0) {
+        printf("test_transpose_4x4_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_transpose_4x4_matrix() passed.\n");
     }
 
     return num_failed;
