@@ -781,6 +781,21 @@ int test_submatrix_4x4()
     return 1;
 }
 
+int test_minor_3x3_matrix()
+{
+    float a_values[9] = { 3,5,0,2,-1,-7,6,-1,5 };
+    struct Matrix A = new_matrix_3x3(a_values);
+
+    int error = 0;
+    float minor = minor_3x3_matrix(&A, 1, 0, &error);
+
+    free_matrix(&A);
+
+    if (!is_equal_float(minor, 25)) { return -1; }
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1163,6 +1178,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_submatrix_4x4() passed.\n");
+    }
+
+    result = test_minor_3x3_matrix();
+    if (result < 0) {
+        printf("test_minor_3x3_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_minor_3x3_matrix() passed.\n");
     }
 
     return num_failed;

@@ -321,9 +321,18 @@ struct Matrix submatrix_4x4(struct Matrix* A, unsigned int row, unsigned int col
 		b_values[6] = A->elements[8]; b_values[7] = A->elements[9]; b_values[8] = A->elements[10];
 	}
 
-	*error = 0;
+	*error = 1;
 	return new_matrix_3x3(b_values);
 
+}
+
+float minor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int *error)
+{
+	struct Matrix B = submatrix_3x3(A, row, col, error);
+	float det = det_2x2_matrix(&B, error);
+
+	*error = 1;
+	return det;
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
