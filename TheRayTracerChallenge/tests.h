@@ -677,12 +677,13 @@ int test_mult_4x4_matrix_tuple()
     int error = 0;
     Tuple P = mult_4x4_matrix_tuple(&A, &B, &error);
 
+    free_matrix(&A);
+
     if (P.x != 18) { return -1; }
     if (P.y != 24) { return -2; }
     if (P.z != 33) { return -3; }
     if (P.w != 1) { return -4; }
-
-    free_matrix(&A);
+    
     return 1;
 }
 
@@ -697,11 +698,11 @@ int test_new_matrix_4x4_identity()
 
     int comp = is_equal_matrix(4, 4, &A, &P);
 
-    if (comp != 1) { return -1; }
-
     free_matrix(&A);
     free_matrix(&I);
     free_matrix(&P);
+
+    if (comp != 1) { return -1; }
     return 1;
 }
 
@@ -716,12 +717,11 @@ int test_transpose_4x4_matrix()
     Matrix T = transpose_4x4_matrix(&A, &error);
     int comp = is_equal_matrix(4, 4, &B, &T);
 
-    if (comp != 1) { return -1; }
-
     free_matrix(&A);
     free_matrix(&B);
     free_matrix(&T);
 
+    if (comp != 1) { return -1; }
     return 1;
 }
 
@@ -733,8 +733,11 @@ int test_det_2x2_matrix()
 
     int error = 0;
     float det = det_2x2_matrix(&A, &error);
+    int comp = is_equal_float(det, 17);
+    
+    free_matrix(&A);
 
-    if (!is_equal_float(det, 17)) { return -1; }
+    if (comp != 1) { return -1; }
     return 1;
 }
 
@@ -748,7 +751,13 @@ int test_submatrix_3x3()
     int error = 0;
     struct Matrix S = submatrix_3x3(&A, 0, 2, &error);
 
-    if (!is_equal_matrix(2, 2, &B, &S)) { return -1; }
+    int comp = is_equal_matrix(2, 2, &B, &S);
+    
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&S);
+    
+    if (comp != 1) { return -1; }
     return 1;
 }
 
