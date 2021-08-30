@@ -195,15 +195,135 @@ struct Matrix submatrix_3x3(struct Matrix* A, unsigned int row, unsigned int col
 	float b_values[4]= { 0,0,0,0 };
 	
 	if ((A->rows != 3) || (A->cols != 3)) { *error = -1;  return new_matrix_2x2(b_values); }
-	if (row == 1 || col == 1) { *error = -2;  return new_matrix_2x2(b_values); }
 
-	if (row == 2 && col == 2) { b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3]; b_values[3] = A->elements[4]; }
-	if (row == 2 && col == 0) { b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[4]; b_values[3] = A->elements[5]; }
-	if (row == 0 && col == 2) { b_values[0] = A->elements[3]; b_values[1] = A->elements[4]; b_values[2] = A->elements[6]; b_values[3] = A->elements[7]; }
+	//
 	if (row == 0 && col == 0) { b_values[0] = A->elements[4]; b_values[1] = A->elements[5]; b_values[2] = A->elements[7]; b_values[3] = A->elements[8]; }
+	if (row == 0 && col == 1) { b_values[0] = A->elements[3]; b_values[1] = A->elements[5]; b_values[2] = A->elements[6]; b_values[3] = A->elements[8]; }
+	if (row == 0 && col == 2) { b_values[0] = A->elements[3]; b_values[1] = A->elements[4]; b_values[2] = A->elements[6]; b_values[3] = A->elements[7]; }
+
+	//
+	if (row == 1 && col == 0) { b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[7]; b_values[3] = A->elements[8]; }
+	if (row == 1 && col == 1) { b_values[0] = A->elements[0]; b_values[1] = A->elements[2]; b_values[2] = A->elements[6]; b_values[3] = A->elements[8]; }
+	if (row == 1 && col == 2) { b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[6]; b_values[3] = A->elements[7]; }
+
+	//
+	if (row == 2 && col == 0) { b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[4]; b_values[3] = A->elements[5]; }
+	if (row == 2 && col == 1) { b_values[0] = A->elements[0]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3]; b_values[3] = A->elements[5]; }
+	if (row == 2 && col == 2) { b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3]; b_values[3] = A->elements[4]; }
 
 	*error = 1;
 	return new_matrix_2x2(b_values);
+}
+
+struct Matrix submatrix_4x4(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+{
+	float b_values[9] = { 0,0,0,0,0,0,0,0,0 };
+
+	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return new_matrix_3x3(b_values); }
+
+	//
+	if (row == 0 && col == 0) { 
+		b_values[0] = A->elements[5]; b_values[1] = A->elements[6]; b_values[2] = A->elements[7];
+		b_values[3] = A->elements[9]; b_values[4] = A->elements[10]; b_values[5] = A->elements[11];
+		b_values[6] = A->elements[13]; b_values[7] = A->elements[14]; b_values[8] = A->elements[15]; 
+	}
+
+	if (row == 0 && col == 1) {
+		b_values[0] = A->elements[4]; b_values[1] = A->elements[6]; b_values[2] = A->elements[7];
+		b_values[3] = A->elements[8]; b_values[4] = A->elements[10]; b_values[5] = A->elements[11];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[14]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 0 && col == 2) {
+		b_values[0] = A->elements[4]; b_values[1] = A->elements[5]; b_values[2] = A->elements[7];
+		b_values[3] = A->elements[8]; b_values[4] = A->elements[9]; b_values[5] = A->elements[11];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[13]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 0 && col == 3) {
+		b_values[0] = A->elements[4]; b_values[1] = A->elements[5]; b_values[2] = A->elements[6];
+		b_values[3] = A->elements[8]; b_values[4] = A->elements[9]; b_values[5] = A->elements[10];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[13]; b_values[8] = A->elements[14];
+	}
+	
+	//
+	if (row == 1 && col == 0) {
+		b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[9]; b_values[4] = A->elements[10]; b_values[5] = A->elements[11];
+		b_values[6] = A->elements[13]; b_values[7] = A->elements[14]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 1 && col == 1) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[8]; b_values[4] = A->elements[10]; b_values[5] = A->elements[11];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[14]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 1 && col == 2) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[8]; b_values[4] = A->elements[9]; b_values[5] = A->elements[11];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[13]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 1 && col == 3) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[2];
+		b_values[3] = A->elements[8]; b_values[4] = A->elements[9]; b_values[5] = A->elements[10];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[13]; b_values[8] = A->elements[14];
+	}
+
+	//
+	if (row == 2 && col == 0) {
+		b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[5]; b_values[4] = A->elements[6]; b_values[5] = A->elements[7];
+		b_values[6] = A->elements[13]; b_values[7] = A->elements[14]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 2 && col == 1) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[4]; b_values[4] = A->elements[6]; b_values[5] = A->elements[7];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[14]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 2 && col == 2) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[4]; b_values[4] = A->elements[5]; b_values[5] = A->elements[7];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[13]; b_values[8] = A->elements[15];
+	}
+
+	if (row == 2 && col == 3) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[2];
+		b_values[3] = A->elements[4]; b_values[4] = A->elements[5]; b_values[5] = A->elements[6];
+		b_values[6] = A->elements[12]; b_values[7] = A->elements[13]; b_values[8] = A->elements[14];
+	}
+
+	//
+	if (row == 3 && col == 0) {
+		b_values[0] = A->elements[1]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[5]; b_values[4] = A->elements[6]; b_values[5] = A->elements[7];
+		b_values[6] = A->elements[9]; b_values[7] = A->elements[10]; b_values[8] = A->elements[11];
+	}
+
+	if (row == 3 && col == 1) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[4]; b_values[4] = A->elements[6]; b_values[5] = A->elements[7];
+		b_values[6] = A->elements[8]; b_values[7] = A->elements[10]; b_values[8] = A->elements[11];
+	}
+
+	if (row == 3 && col == 2) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3];
+		b_values[3] = A->elements[4]; b_values[4] = A->elements[5]; b_values[5] = A->elements[7];
+		b_values[6] = A->elements[8]; b_values[7] = A->elements[9]; b_values[8] = A->elements[1];
+	}
+
+	if (row == 3 && col == 3) {
+		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[2];
+		b_values[3] = A->elements[4]; b_values[4] = A->elements[5]; b_values[5] = A->elements[6];
+		b_values[6] = A->elements[8]; b_values[7] = A->elements[9]; b_values[8] = A->elements[10];
+	}
+
+	*error = 0;
+	return new_matrix_3x3(b_values);
+
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)

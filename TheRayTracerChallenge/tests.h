@@ -761,6 +761,26 @@ int test_submatrix_3x3()
     return 1;
 }
 
+int test_submatrix_4x4()
+{
+    float a_values[16] = {-6, 1, 1, 6, -8, 5, 8, 6, -1, 0, 8, 2, -7, 1, -1, 1};
+    struct Matrix A = new_matrix_4x4(a_values);
+    float b_values[9] = {-6, 1, 6, -8, 8, 6, -7, -1, 1};
+    struct Matrix B = new_matrix_3x3(b_values);
+
+    int error = 0;
+    struct Matrix S = submatrix_4x4(&A, 2, 1, &error);
+
+    int comp = is_equal_matrix(3, 3, &B, &S);
+
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&S);
+
+    if (comp != 1) { return -1; }
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1134,6 +1154,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_submatrix_3x3() passed.\n");
+    }
+
+    result = test_submatrix_4x4();
+    if (result < 0) {
+        printf("test_submatrix_4x4() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_submatrix_4x4() passed.\n");
     }
 
     return num_failed;
