@@ -868,6 +868,62 @@ int test_det_4x4_matrix()
     return 1;
 }
 
+int test_is_invertable_4x4_matrix()
+{
+    float a_values[16] = { 6,4,4,4,5,5,7,6,4,-9,3,-7,9,1,7,-6 };
+    float b_values[16] = { -4,2,-2,-3,9,6,2,6,0,-5,1,-5,0,0,0,0 };
+
+    struct Matrix A = new_matrix_4x4(a_values);
+    struct Matrix B = new_matrix_4x4(b_values);
+
+    unsigned int is_invertable_A = 0;
+    unsigned int is_invertable_B = 0;
+
+    int error = 0;
+    is_invertable_A = is_invertable_4x4_matrix(&A, &error);
+    is_invertable_B = is_invertable_4x4_matrix(&B, &error);
+
+    free_matrix(&A);
+    free_matrix(&B);
+
+    if (is_invertable_A != 1) { return -1; }
+    if (is_invertable_B != 0) { return -2; }
+
+    return 1;
+}
+
+int test_inverse_4x4_matrix()
+{
+    float a_values[16] = { -5,2,6,-8,1,-5,1,8,7,7,-6,-7,1,-3,7,4 };
+    struct Matrix A = new_matrix_4x4(a_values);
+
+    float expected_inverse_values[16] = { 0.21805, 0.45113, 0.24060, -0.04511, -0.80827, -1.45677, -0.44361, 0.52068, -0.07895, -0.22368, -0.05263, 0.19737, -0.52256, -0.81391, -0.30075, 0.30639 };
+    struct Matrix expected_inverse_A = new_matrix_4x4(expected_inverse_values);
+
+    int error = 0;
+    float det = det_4x4_matrix(&A, &error);
+    float c1 = cofactor_4x4_matrix(&A, 2, 3, &error);
+
+    struct Matrix inverse_A = inverse_4x4_matrix(&A, &error);
+    float inverse_A_3_2 = get_matrix_element(&inverse_A, 3, 2, &error);
+    float c2 = cofactor_4x4_matrix(&A, 3, 2, &error);
+    float inverse_A_2_3 = get_matrix_element(&inverse_A, 2, 3, &error);
+
+    free_matrix(&A);
+    
+    if (!is_equal_float(det, 532)) { free_matrix(&inverse_A); free_matrix(&expected_inverse_A); return -1; }
+    if (!is_equal_float(c1, -160)) { free_matrix(&inverse_A); free_matrix(&expected_inverse_A); return -2; }
+    if (!is_equal_float(inverse_A_3_2, (-160.0/532.0))) { free_matrix(&inverse_A); free_matrix(&expected_inverse_A); return -3; }
+    if (!is_equal_float(c2, 105)) { free_matrix(&inverse_A); free_matrix(&expected_inverse_A); return -4; }
+    if (!is_equal_float(inverse_A_2_3, (105.0/532.0))) { free_matrix(&inverse_A); free_matrix(&expected_inverse_A); return -5; }
+    if (!is_equal_matrix(4, 4, &expected_inverse_A, &inverse_A)) { free_matrix(&inverse_A); free_matrix(&expected_inverse_A); return -6; }
+
+    free_matrix(&inverse_A);
+    free_matrix(&expected_inverse_A);
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1286,6 +1342,24 @@ int chapter_three_tests()
     }
     else {
         printf("test_det_4x4_matrix() passed.\n");
+    }
+
+    result = test_is_invertable_4x4_matrix();
+    if (result < 0) {
+        printf("test_is_invertable_4x4_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_is_invertable_4x4_matrix() passed.\n");
+    }
+
+    result = test_inverse_4x4_matrix();
+    if (result < 0) {
+        printf("test_inverse_4x4_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_inverse_4x4_matrix() passed.\n");
     }
 
     return num_failed;

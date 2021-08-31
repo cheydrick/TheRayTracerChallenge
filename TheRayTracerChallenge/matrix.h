@@ -32,6 +32,7 @@ float det_3x3_matrix(struct Matrix*, int*);
 float minor_4x4_matrix(struct Matrix*, unsigned int, unsigned int, int*);
 float det_4x4_matrix(struct Matrix*, int*);
 void debug_print_matrix(unsigned int, unsigned int, struct Matrix*);
+unsigned int is_invertable_4x4_matrix(struct Matrix*, int *);
 
 struct Matrix new_matrix(unsigned int rows, unsigned int cols)
 {
@@ -334,7 +335,7 @@ struct Matrix submatrix_4x4(struct Matrix* A, unsigned int row, unsigned int col
 	if (row == 3 && col == 2) {
 		b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3];
 		b_values[3] = A->elements[4]; b_values[4] = A->elements[5]; b_values[5] = A->elements[7];
-		b_values[6] = A->elements[8]; b_values[7] = A->elements[9]; b_values[8] = A->elements[1];
+		b_values[6] = A->elements[8]; b_values[7] = A->elements[9]; b_values[8] = A->elements[11];
 	}
 
 	if (row == 3 && col == 3) {
@@ -429,6 +430,64 @@ float det_4x4_matrix(struct Matrix* A, int* error)
 
 	*error = 1;
 	return sum;
+}
+
+unsigned int is_invertable_4x4_matrix(struct Matrix* A, int *error)
+{
+	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return 0; }
+
+	int local_error = 0;
+	float det = det_4x4_matrix(A, &local_error);
+
+	if (local_error != 1) { *error = -2; return 0; }
+
+	if (is_equal_float(det, 0.0)) { return 0; }
+	else { return 1; }
+}
+
+struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
+{
+	float cofactor_matrix_values[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+	float inverse_matrix_values[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
+	// Construct cofactor matrix values
+	int local_error = 0;
+	int cofactor_values_index = 0;
+	float tmp_cofactor = 0;
+	for (int i = 0; i < A->rows; i++)
+	{
+		for (int j = 0; j < A->cols; j++)
+		{
+			tmp_cofactor = cofactor_4x4_matrix(A, i, j, &local_error);
+			cofactor_matrix_values[cofactor_values_index] = tmp_cofactor;
+			cofactor_values_index++;
+		}
+	}
+
+	struct Matrix cofactor_matrix = new_matrix_4x4(cofactor_matrix_values);
+	
+	// Transpose the cofactor matrix
+	struct Matrix transposed_cofactor_matrix = transpose_4x4_matrix(&cofactor_matrix, &local_error);
+
+	float det = det_4x4_matrix(A, &local_error);
+
+	int inverse_values_index = 0;
+	for (int i = 0; i < A->rows; i++)
+	{
+		for (int j = 0; j < A->cols; j++)
+		{
+			inverse_matrix_values[inverse_values_index] = get_matrix_element(&transposed_cofactor_matrix, i, j, &local_error) / det;
+			inverse_values_index++;
+		}
+	}
+
+	struct Matrix inverse_matrix = new_matrix_4x4(inverse_matrix_values);
+
+	free_matrix(&cofactor_matrix);
+	free_matrix(&transposed_cofactor_matrix);
+
+	*error = 1;
+	return inverse_matrix;
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
