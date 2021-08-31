@@ -335,6 +335,19 @@ float minor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int
 	return det;
 }
 
+float cofactor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+{
+	int local_error = 0;
+
+	float minor = minor_3x3_matrix(A, row, col, &local_error);
+	if (local_error != 1) { *error = -1; return 0; }
+
+	if ((row + col) % 2 != 0) { minor = minor * -1; }
+	
+	*error = 1;
+	return minor;
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;

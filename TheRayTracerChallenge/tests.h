@@ -796,6 +796,33 @@ int test_minor_3x3_matrix()
     return 1;
 }
 
+int test_cofactor_3x3_matrix()
+{
+    float a_values[9] = { 3,5,0,2,-1,-7,6,-1,5 };
+    struct Matrix A = new_matrix_3x3(a_values);
+
+    int error = 0;
+    
+    float m1 = minor_3x3_matrix(&A, 0, 0, &error);
+    if (error != 1) { free_matrix(&A); return -1; }
+    if (!is_equal_float(m1, -12)) { free_matrix(&A); return -2; }
+
+    float c1 = cofactor_3x3_matrix(&A, 0, 0, &error);
+    if (error != 1) { free_matrix(&A); return -3; }
+    if (!is_equal_float(c1, -12)) { free_matrix(&A); return -4; }
+
+    float m2 = minor_3x3_matrix(&A, 1, 0, &error);
+    if (error != 1) { free_matrix(&A); return -5; }
+    if (!is_equal_float(m2, 25)) { free_matrix(&A); return -6; }
+
+    float c2 = cofactor_3x3_matrix(&A, 1, 0, &error);
+    if (error != 1) { free_matrix(&A); return -7; }
+    if (!is_equal_float(c2, -25)) { free_matrix(&A); return -8; }
+
+    free_matrix(&A);
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1187,6 +1214,15 @@ int chapter_three_tests()
     }
     else {
         printf("test_minor_3x3_matrix() passed.\n");
+    }
+
+    result = test_cofactor_3x3_matrix();
+    if (result < 0) {
+        printf("test_cofactor_3x3_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_cofactor_3x3_matrix() passed.\n");
     }
 
     return num_failed;
