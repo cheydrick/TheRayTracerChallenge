@@ -335,6 +335,12 @@ float minor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int
 	return det;
 }
 
+float minor_4x4_matrix(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+{
+	*error = 1;
+	return 0;
+}
+
 float cofactor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int* error)
 {
 	int local_error = 0;
@@ -346,6 +352,33 @@ float cofactor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, 
 	
 	*error = 1;
 	return minor;
+}
+
+float cofactor_4x4_matrix(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+{
+	*error = 1;
+	return 0;
+}
+
+float det_3x3_matrix(struct Matrix* A, int* error)
+{
+	if ((A->rows != 3) || (A->cols != 3)) { *error = -1;  return 0; }
+	
+	int local_error = 0;
+	float sum = 0;
+
+	sum += get_matrix_element(A, 0, 0, &local_error) * cofactor_3x3_matrix(A, 0, 0, &local_error);
+	sum += get_matrix_element(A, 0, 1, &local_error) * cofactor_3x3_matrix(A, 0, 1, &local_error);
+	sum += get_matrix_element(A, 0, 2, &local_error) * cofactor_3x3_matrix(A, 0, 2, &local_error);
+
+	*error = 1;
+	return sum;
+}
+
+float det_4x4_matrix(struct Matrix* A, int* error)
+{
+	*error = 1;
+	return 0;
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
