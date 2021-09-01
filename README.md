@@ -21,8 +21,8 @@ My implementation of the ray tracer described in The Ray Tracer Challenge by Jam
   - [x] Inverting Matrices
   - [ ] Putting It Together
 - [ ] Chapter 4: Matrix Transformations
-  - [ ] Translation
-  - [ ] Scaling
+  - [x] Translation
+  - [x] Scaling
   - [ ] Rotation
   - [ ] Shearing
   - [ ] Chaining Transformations

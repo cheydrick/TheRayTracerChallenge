@@ -1084,6 +1084,23 @@ int test_scaling_inversion()
     else return 1;
 }
 
+int test_scaling_reflection()
+{
+    struct Matrix S = new_scaling_matrix(-1, 1, 1);
+    struct Tuple point = new_point_tuple(2, 3, 4);
+    struct Tuple expected_scaled_point = new_point_tuple(-2, 3, 4);
+
+    int error = 0;
+    struct Tuple scaled_point = mult_4x4_matrix_tuple(&S, &point, &error);
+
+    int comp = is_equal_tuple(expected_scaled_point, scaled_point);
+
+    free_matrix(&S);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1600,6 +1617,15 @@ int chapter_four_tests()
     }
     else {
         printf("test_scaling_inversion() passed.\n");
+    }
+
+    result = test_scaling_reflection();
+    if (result < 0) {
+        printf("test_scaling_reflection() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_scaling_reflection() passed.\n");
     }
 
     return num_failed;
