@@ -1031,6 +1031,59 @@ int test_translation_vector()
     else return 1;
 }
 
+int test_scaling_matrix()
+{
+    struct Matrix S = new_scaling_matrix(2, 3, 4);
+    struct Tuple point = new_point_tuple(-4, 6, 8);
+    struct Tuple expected_scaled_point = new_point_tuple(-8, 18, 32);
+
+    int error = 0;
+    struct Tuple scaled_point = mult_4x4_matrix_tuple(&S, &point, &error);
+
+    int comp = is_equal_tuple(expected_scaled_point, scaled_point);
+
+    free_matrix(&S);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
+int test_scaling_vector()
+{
+    struct Matrix S = new_scaling_matrix(2, 3, 4);
+    struct Tuple vector = new_vector_tuple(-4, 6, 8);
+    struct Tuple expected_scaled_vector = new_vector_tuple(-8, 18, 32);
+
+    int error = 0;
+    struct Tuple scaled_vector = mult_4x4_matrix_tuple(&S, &vector, &error);
+
+    int comp = is_equal_tuple(expected_scaled_vector, scaled_vector);
+
+    free_matrix(&S);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
+int test_scaling_inversion()
+{
+    struct Matrix S = new_scaling_matrix(2, 3, 4);
+    int error = 0;
+    struct Matrix inverse_S = inverse_4x4_matrix(&S, &error);
+    struct Tuple vector = new_vector_tuple(-4, 6, 8);
+    struct Tuple expected_inverted_scaled_vector = new_vector_tuple(-2, 2, 2);
+
+    struct Tuple scaled_vector = mult_4x4_matrix_tuple(&inverse_S, &vector, &error);
+
+    int comp = is_equal_tuple(expected_inverted_scaled_vector, scaled_vector);
+
+    free_matrix(&S);
+    free_matrix(&inverse_S);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1189,7 +1242,7 @@ int chapter_one_tests()
         printf("test_cross_product() passed.\n");
     }
 
-    result = test_projectile();
+    // result = test_projectile();
     // Result of test_projectile() is irrelevant; it's just an exercise
 
     return num_failed;
@@ -1520,6 +1573,33 @@ int chapter_four_tests()
     }
     else {
         printf("test_translation_vector() passed.\n");
+    }
+
+    result = test_scaling_matrix();
+    if (result < 0) {
+        printf("test_scaling_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_scaling_matrix() passed.\n");
+    }
+
+    result = test_scaling_vector();
+    if (result < 0) {
+        printf("test_scaling_vector() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_scaling_vector() passed.\n");
+    }
+
+    result = test_scaling_inversion();
+    if (result < 0) {
+        printf("test_scaling_inversion() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_scaling_inversion() passed.\n");
     }
 
     return num_failed;

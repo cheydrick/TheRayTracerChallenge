@@ -500,6 +500,16 @@ struct Matrix new_translation_matrix(float x, float y, float z)
 	return tmp_translation_matrix;
 }
 
+struct Matrix new_scaling_matrix(float x, float y, float z)
+{
+	struct Matrix tmp_scaling_matrix = new_matrix_4x4_identity();
+	tmp_scaling_matrix.elements[0] = x;
+	tmp_scaling_matrix.elements[5] = y;
+	tmp_scaling_matrix.elements[10] = z;
+
+	return tmp_scaling_matrix;
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;
