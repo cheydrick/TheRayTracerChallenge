@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "tuple.h"
 #include "misc.h"
 
@@ -508,6 +509,18 @@ struct Matrix new_scaling_matrix(float x, float y, float z)
 	tmp_scaling_matrix.elements[10] = z;
 
 	return tmp_scaling_matrix;
+}
+
+struct Matrix new_rotation_x_matrix(float radians)
+{
+	struct Matrix tmp_rotation_matrix = new_matrix_4x4_identity();
+
+	tmp_rotation_matrix.elements[5] = cos(radians);
+	tmp_rotation_matrix.elements[6] = -1.0 * sin(radians);
+	tmp_rotation_matrix.elements[9] = sin(radians);
+	tmp_rotation_matrix.elements[10] = cos(radians);
+
+	return tmp_rotation_matrix;
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)

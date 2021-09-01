@@ -1,5 +1,7 @@
 #pragma once
 #include <stdio.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "tuple.h"
 #include "color.h"
 #include "canvas.h"
@@ -1101,6 +1103,30 @@ int test_scaling_reflection()
     else return 1;
 }
 
+int test_rotation_x_matrix()
+{
+    struct Tuple point = new_point_tuple(0, 1, 0);
+    struct Tuple expected_half_quarter_point = new_point_tuple(0, sqrt(2) / 2, sqrt(2) / 2);
+    struct Tuple expected_full_quarter_point = new_point_tuple(0, 0, 1);
+
+    struct Matrix half_quarter_x_rotation_matrix = new_rotation_x_matrix(M_PI / 4.0);
+    struct Matrix full_quarter_x_rotation_matrix = new_rotation_x_matrix(M_PI / 2.0);
+
+    int error = 0;
+    struct Tuple half_quarter_point = mult_4x4_matrix_tuple(&half_quarter_x_rotation_matrix, &point, &error);
+    struct Tuple full_quarter_point = mult_4x4_matrix_tuple(&full_quarter_x_rotation_matrix, &point, &error);
+
+    int comp1 = is_equal_tuple(expected_half_quarter_point, half_quarter_point);
+    int comp2 = is_equal_tuple(expected_full_quarter_point, full_quarter_point);
+
+    free_matrix(&half_quarter_x_rotation_matrix);
+    free_matrix(&full_quarter_x_rotation_matrix);
+
+    if (comp1 != 1) { return -1; }
+    else if (comp2 != 1) { return -2; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1626,6 +1652,15 @@ int chapter_four_tests()
     }
     else {
         printf("test_scaling_reflection() passed.\n");
+    }
+
+    result = test_rotation_x_matrix();
+    if (result < 0) {
+        printf("test_rotation_x_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_rotation_x_matrix() passed.\n");
     }
 
     return num_failed;
