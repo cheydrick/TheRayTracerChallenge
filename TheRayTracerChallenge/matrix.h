@@ -3,6 +3,7 @@
 #include <string.h>
 #include "tuple.h"
 #include "misc.h"
+
 struct Matrix
 {
 	float* elements;
@@ -31,8 +32,9 @@ float cofactor_4x4_matrix(struct Matrix*, unsigned int, unsigned int, int*);
 float det_3x3_matrix(struct Matrix*, int*);
 float minor_4x4_matrix(struct Matrix*, unsigned int, unsigned int, int*);
 float det_4x4_matrix(struct Matrix*, int*);
-void debug_print_matrix(unsigned int, unsigned int, struct Matrix*);
 unsigned int is_invertable_4x4_matrix(struct Matrix*, int *);
+struct Matrix inverse_4x4_matrix(struct Matrix*, int*);
+void debug_print_matrix(unsigned int, unsigned int, struct Matrix*);
 
 struct Matrix new_matrix(unsigned int rows, unsigned int cols)
 {
@@ -357,8 +359,6 @@ float minor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int
 	*error = 1;
 	return det;
 }
-
-
 
 float cofactor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int* error)
 {
