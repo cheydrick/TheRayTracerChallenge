@@ -490,6 +490,16 @@ struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
 	return inverse_matrix;
 }
 
+struct Matrix new_translation_matrix(float x, float y, float z)
+{
+	struct Matrix tmp_translation_matrix = new_matrix_4x4_identity();
+	tmp_translation_matrix.elements[3] = x;
+	tmp_translation_matrix.elements[7] = y;
+	tmp_translation_matrix.elements[11] = z;
+
+	return tmp_translation_matrix;
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;

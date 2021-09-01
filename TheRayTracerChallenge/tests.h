@@ -979,6 +979,58 @@ int test_inverse_4x4_matrix_multiplication()
     else return 1;
 }
 
+// Chapter 3 Tests
+int test_translation_matrix()
+{
+    struct Matrix T = new_translation_matrix(5, -3, 2);
+    struct Tuple point = new_point_tuple(-3, 4, 5);
+    struct Tuple expected_transformed_point = new_point_tuple(2, 1, 7);
+
+    int error = 0;
+    struct Tuple transformed_point = mult_4x4_matrix_tuple(&T, &point, &error);
+    int comp = is_equal_tuple(expected_transformed_point, transformed_point);
+
+    free_matrix(&T);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
+int test_translation_inversion()
+{
+    struct Matrix T = new_translation_matrix(5, -3, 2);
+    int error = 0;
+    struct Matrix inverse_T = inverse_4x4_matrix(&T, &error);
+    struct Tuple point = new_point_tuple(-3, 4, 5);
+    struct Tuple expected_inverse_point = new_point_tuple(-8, 7, 3);
+
+    struct Tuple inverse_point = mult_4x4_matrix_tuple(&inverse_T, &point, &error);
+
+    int comp = is_equal_tuple(expected_inverse_point, inverse_point);
+
+    free_matrix(&T);
+    free_matrix(&inverse_T);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
+int test_translation_vector()
+{
+    struct Matrix T = new_translation_matrix(5, -3, 2);
+    struct Tuple vector = new_vector_tuple(-3, 4, 5);
+
+    int error = 0;
+    struct Tuple translated_vector = mult_4x4_matrix_tuple(&T, &vector, &error);
+
+    int comp = is_equal_tuple(vector, translated_vector);
+
+    free_matrix(&T);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1433,6 +1485,41 @@ int chapter_three_tests()
     }
     else {
         printf("test_inverse_4x4_matrix_multiplication() passed.\n");
+    }
+
+    return num_failed;
+}
+
+int chapter_four_tests()
+{
+    int result = 0;
+    int num_failed = 0;
+
+    result = test_translation_matrix();
+    if (result < 0) {
+        printf("test_translation_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_translation_matrix() passed.\n");
+    }
+
+    result = test_translation_inversion();
+    if (result < 0) {
+        printf("test_translation_inversion() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_translation_inversion() passed.\n");
+    }
+
+    result = test_translation_vector();
+    if (result < 0) {
+        printf("test_translation_vector() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_translation_vector() passed.\n");
     }
 
     return num_failed;
