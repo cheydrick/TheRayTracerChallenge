@@ -11,14 +11,14 @@ My implementation of the ray tracer described in The Ray Tracer Challenge by Jam
   - [x] Representing Colors
   - [x] Implementing Color Operations
   - [x] Creating a Canvas
-  - [ ] Saving a Canvas
+  - [x] Saving a Canvas
   - [ ] Putting It Together
 - [ ] Chapter 3: Matrices
-  - [ ] Creating a Matrix
-  - [ ] Multiplying Matrices
-  - [ ] The Identity Matrix
-  - [ ] Transposing Matrices
-  - [ ] Inverting Matrices
+  - [x] Creating a Matrix
+  - [x] Multiplying Matrices
+  - [x] The Identity Matrix
+  - [x] Transposing Matrices
+  - [x] Inverting Matrices
   - [ ] Putting It Together
 - [ ] Chapter 4: Matrix Transformations
   - [ ] Translation
