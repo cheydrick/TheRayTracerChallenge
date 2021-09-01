@@ -924,6 +924,61 @@ int test_inverse_4x4_matrix()
     return 1;
 }
 
+int test_inverse_4x4_matrix_extra()
+{
+    float a_values[16] = { 8,-5,9,2,7,5,6,1,-6,0,9,6,-3,0,-9,-4 };
+    float b_values[16] = { 9,3,0,9,-5,-2,-6,-3,-4,9,6,4,-7,6,6,2 };
+    float expected_inverse_a_values[16] = { -0.15385, -0.15385, -0.28205, -0.53846, -0.07692, 0.12308, 0.02564, 0.03077, 0.35897, 0.35897, 0.43590, 0.92308, -0.69231, -0.69231, -0.76923, -1.92308 };
+    float expected_inverse_b_values[16] = { -0.04074, -0.07778, 0.14444, -0.22222, -0.07778, 0.03333, 0.36667, -0.33333, -0.02901, -0.14630, -0.10926, 0.12963, 0.17778, 0.06667, -0.26667, 0.33333 };
+
+    int error = 0;
+    struct Matrix A = new_matrix_4x4(a_values);
+    struct Matrix B = new_matrix_4x4(b_values);
+    struct Matrix expected_inverse_A = new_matrix_4x4(expected_inverse_a_values);
+    struct Matrix expected_inverse_B = new_matrix_4x4(expected_inverse_b_values);
+    struct Matrix inverse_A = inverse_4x4_matrix(&A, &error);
+    struct Matrix inverse_B = inverse_4x4_matrix(&B, &error);
+
+    free_matrix(&A);
+    free_matrix(&B);
+
+    if (!is_equal_matrix(4, 4, &expected_inverse_A, &inverse_A)) { free_matrix(&expected_inverse_A); free_matrix(&inverse_A); free_matrix(&expected_inverse_B); free_matrix(&inverse_B); return -1; }
+    if (!is_equal_matrix(4, 4, &expected_inverse_B, &inverse_B)) { free_matrix(&expected_inverse_A); free_matrix(&inverse_A); free_matrix(&expected_inverse_B); free_matrix(&inverse_B); return -2; }
+
+    free_matrix(&expected_inverse_A);
+    free_matrix(&inverse_A); 
+    free_matrix(&expected_inverse_B); 
+    free_matrix(&inverse_B);
+
+    return 1;
+}
+
+int test_inverse_4x4_matrix_multiplication()
+{
+    float a_values[16] = {3,-9,7,3,3,-8,2,-9,-4,4,4,1,-6,5,-1,1};
+    float b_values[16] = {8,2,2,2,3,-1,7,0,7,0,5,4,6,-2,0,5};
+
+    struct Matrix A = new_matrix_4x4(a_values);
+    struct Matrix B = new_matrix_4x4(b_values);
+
+    int error = 0;
+    struct Matrix C = mult_4x4_matrices(&A, &B, &error);
+
+    struct Matrix inverse_B = inverse_4x4_matrix(&B, &error);
+    struct Matrix C_inverse_B = mult_4x4_matrices(&C, &inverse_B, &error);
+
+    int comp = is_equal_matrix(4, 4, &A, &C_inverse_B);
+
+    free_matrix(&A);
+    free_matrix(&B);
+    free_matrix(&C);
+    free_matrix(&inverse_B);
+    free_matrix(&C_inverse_B);
+
+    if (comp != 1) { return -1; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1360,6 +1415,24 @@ int chapter_three_tests()
     }
     else {
         printf("test_inverse_4x4_matrix() passed.\n");
+    }
+
+    result = test_inverse_4x4_matrix_extra();
+    if (result < 0) {
+        printf("test_inverse_4x4_matrix_extra() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_inverse_4x4_matrix_extra() passed.\n");
+    }
+
+    result = test_inverse_4x4_matrix_multiplication();
+    if (result < 0) {
+        printf("test_inverse_4x4_matrix_multiplication() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_inverse_4x4_matrix_multiplication() passed.\n");
     }
 
     return num_failed;
