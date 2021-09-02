@@ -6,6 +6,7 @@
 #include "color.h"
 #include "canvas.h"
 #include "matrix.h"
+#include "ray.h"
 #include "misc.h"
 
 // All tests return 1 for success, <0 for failure.
@@ -1288,6 +1289,8 @@ int test_multiple_transformation()
     else return 1;
 }
 
+// Chapter 5 Tests
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1867,6 +1870,23 @@ int chapter_four_tests()
     }
     else {
         printf("test_multiple_transformation() passed.\n");
+    }
+
+    return num_failed;
+}
+
+int chapter_five_tests()
+{
+    int result = 0;
+    int num_failed = 0;
+
+    result = test_translation_matrix();
+    if (result < 0) {
+        printf("test_translation_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_translation_matrix() passed.\n");
     }
 
     return num_failed;
