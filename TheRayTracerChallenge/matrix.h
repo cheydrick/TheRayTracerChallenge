@@ -523,6 +523,18 @@ struct Matrix new_rotation_x_matrix(float radians)
 	return tmp_rotation_matrix;
 }
 
+struct Matrix new_rotation_y_matrix(float radians)
+{
+	struct Matrix tmp_rotation_matrix = new_matrix_4x4_identity();
+
+	tmp_rotation_matrix.elements[0] = cos(radians);
+	tmp_rotation_matrix.elements[2] = sin(radians);
+	tmp_rotation_matrix.elements[8] = -1 * sin(radians);
+	tmp_rotation_matrix.elements[10] = cos(radians);
+
+	return tmp_rotation_matrix;
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;
