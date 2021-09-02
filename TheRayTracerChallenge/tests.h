@@ -1249,6 +1249,45 @@ int test_shearing_matrix()
     else return 1;
 }
 
+int test_multiple_transformation()
+{
+    struct Tuple P1 = new_point_tuple(1, 0, 1);
+    struct Matrix R = new_rotation_x_matrix(M_PI / 2.0);
+    struct Matrix S = new_scaling_matrix(5, 5, 5);
+    struct Matrix T = new_translation_matrix(10, 5, 7);
+
+    struct Tuple expected_rotated_P1 = new_point_tuple(1, -1, 0);
+    struct Tuple expected_rotated_scaled_P1 = new_point_tuple(5, -5, 0);
+    struct Tuple expected_rotated_scaled_translated_P1 = new_point_tuple(15, 0, 7);
+
+    int error = 0;
+    struct Tuple rotated_P1 = mult_4x4_matrix_tuple(&R, &P1, &error);
+    struct Tuple rotated_scaled_P1 = mult_4x4_matrix_tuple(&S, &rotated_P1, &error);
+    struct Tuple rotated_scaled_translated_P1 = mult_4x4_matrix_tuple(&T, &rotated_scaled_P1, &error);
+
+    struct Matrix S_T = mult_4x4_matrices(&T, &S, &error);
+    struct Matrix S_T_R = mult_4x4_matrices(&S_T, &R, &error);
+
+    struct Tuple chained_rotated_scaled_translated_P1 = mult_4x4_matrix_tuple(&S_T_R, &P1, &error);
+
+    free_matrix(&R);
+    free_matrix(&S);
+    free_matrix(&T);
+    free_matrix(&S_T);
+    free_matrix(&S_T_R);
+
+    int comp1 = is_equal_tuple(expected_rotated_P1, rotated_P1);
+    int comp2 = is_equal_tuple(expected_rotated_scaled_P1, rotated_scaled_P1);
+    int comp3 = is_equal_tuple(expected_rotated_scaled_translated_P1, rotated_scaled_translated_P1);
+    int comp4 = is_equal_tuple(expected_rotated_scaled_translated_P1, chained_rotated_scaled_translated_P1);
+
+    if (comp1 != 1) { return -1; }
+    else if (comp2 != 1) { return -2; }
+    else if (comp3 != 1) { return -3; }
+    else if (comp4 != 1) { debug_print_tuple(chained_rotated_scaled_translated_P1); return -4; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1819,6 +1858,15 @@ int chapter_four_tests()
     }
     else {
         printf("test_shearing_matrix() passed.\n");
+    }
+
+    result = test_multiple_transformation();
+    if (result < 0) {
+        printf("test_multiple_transformation() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_multiple_transformation() passed.\n");
     }
 
     return num_failed;
