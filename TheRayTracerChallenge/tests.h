@@ -1195,6 +1195,60 @@ int test_rotation_z_matrix()
     else return 1;
 }
 
+int test_shearing_matrix()
+{
+    struct Matrix S1 = new_shearing_matrix(1, 0, 0, 0, 0, 0);
+    struct Matrix S2 = new_shearing_matrix(0, 1, 0, 0, 0, 0);
+    struct Matrix S3 = new_shearing_matrix(0, 0, 1, 0, 0, 0);
+    struct Matrix S4 = new_shearing_matrix(0, 0, 0, 1, 0, 0);
+    struct Matrix S5 = new_shearing_matrix(0, 0, 0, 0, 1, 0);
+    struct Matrix S6 = new_shearing_matrix(0, 0, 0, 0, 0, 1);
+
+    struct Tuple P1 = new_point_tuple(2, 3, 4);
+    struct Tuple P2 = new_point_tuple(2, 3, 4);
+    struct Tuple P3 = new_point_tuple(2, 3, 4);
+    struct Tuple P4 = new_point_tuple(2, 3, 4);
+    struct Tuple P5 = new_point_tuple(2, 3, 4);
+    struct Tuple P6 = new_point_tuple(2, 3, 4);
+
+    struct Tuple expected_sheared_P1 = new_point_tuple(5, 3, 4);
+    struct Tuple expected_sheared_P2 = new_point_tuple(6, 3, 4);
+    struct Tuple expected_sheared_P3 = new_point_tuple(2, 5, 4);
+    struct Tuple expected_sheared_P4 = new_point_tuple(2, 7, 4);
+    struct Tuple expected_sheared_P5 = new_point_tuple(2, 3, 6);
+    struct Tuple expected_sheared_P6 = new_point_tuple(2, 3, 7);
+
+    int error = 0;
+    struct Tuple sheared_P1 = mult_4x4_matrix_tuple(&S1, &P1, &error);
+    struct Tuple sheared_P2 = mult_4x4_matrix_tuple(&S2, &P2, &error);
+    struct Tuple sheared_P3 = mult_4x4_matrix_tuple(&S3, &P3, &error);
+    struct Tuple sheared_P4 = mult_4x4_matrix_tuple(&S4, &P4, &error);
+    struct Tuple sheared_P5 = mult_4x4_matrix_tuple(&S5, &P5, &error);
+    struct Tuple sheared_P6 = mult_4x4_matrix_tuple(&S6, &P6, &error);
+
+    int comp1 = is_equal_tuple(sheared_P1, expected_sheared_P1);
+    int comp2 = is_equal_tuple(sheared_P2, expected_sheared_P2);
+    int comp3 = is_equal_tuple(sheared_P3, expected_sheared_P3);
+    int comp4 = is_equal_tuple(sheared_P4, expected_sheared_P4);
+    int comp5 = is_equal_tuple(sheared_P5, expected_sheared_P5);
+    int comp6 = is_equal_tuple(sheared_P6, expected_sheared_P6);
+
+    free_matrix(&S1);
+    free_matrix(&S2);
+    free_matrix(&S3);
+    free_matrix(&S4);
+    free_matrix(&S5);
+    free_matrix(&S6);
+
+    if (comp1 != 1) { return -1; }
+    else if (comp2 != 1) { return -2; }
+    else if (comp3 != 1) { return -3; }
+    else if (comp4 != 1) { return -4; }
+    else if (comp5 != 1) { return -5; }
+    else if (comp6 != 1) { return -6; }
+    else return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1756,6 +1810,15 @@ int chapter_four_tests()
     }
     else {
         printf("test_rotation_z_matrix() passed.\n");
+    }
+
+    result = test_shearing_matrix();
+    if (result < 0) {
+        printf("test_shearing_matrix() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_shearing_matrix() passed.\n");
     }
 
     return num_failed;

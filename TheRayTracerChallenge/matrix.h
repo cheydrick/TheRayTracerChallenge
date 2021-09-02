@@ -547,6 +547,20 @@ struct Matrix new_rotation_z_matrix(float radians)
 	return tmp_rotation_matrix;
 }
 
+struct Matrix new_shearing_matrix(float xy, float xz, float yx, float yz, float zx, float zy)
+{
+	struct Matrix tmp_shearing_matrix = new_matrix_4x4_identity();
+
+	tmp_shearing_matrix.elements[1] = xy;
+	tmp_shearing_matrix.elements[2] = xz;
+	tmp_shearing_matrix.elements[4] = yx;
+	tmp_shearing_matrix.elements[6] = yz;
+	tmp_shearing_matrix.elements[8] = zx;
+	tmp_shearing_matrix.elements[9] = zy;
+
+	return tmp_shearing_matrix;
+}
+
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 {
 	int error = 0;
