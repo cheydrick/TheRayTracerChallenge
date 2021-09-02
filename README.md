@@ -23,7 +23,7 @@ My implementation of the ray tracer described in The Ray Tracer Challenge by Jam
 - [ ] Chapter 4: Matrix Transformations
   - [x] Translation
   - [x] Scaling
-  - [ ] Rotation
-  - [ ] Shearing
+  - [x] Rotation
+  - [x] Shearing
   - [ ] Chaining Transformations
   - [ ] Putting It Together
