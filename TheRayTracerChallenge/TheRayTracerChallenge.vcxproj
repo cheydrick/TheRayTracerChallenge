@@ -147,6 +147,7 @@
     <ClInclude Include="matrix.h" />
     <ClInclude Include="misc.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="sphere.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="tuple.h" />
   </ItemGroup>

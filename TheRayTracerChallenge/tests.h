@@ -7,6 +7,7 @@
 #include "canvas.h"
 #include "matrix.h"
 #include "ray.h"
+#include "sphere.h"
 #include "misc.h"
 
 // All tests return 1 for success, <0 for failure.
@@ -1337,6 +1338,91 @@ int test_ray_position()
     else return 1;
 }
 
+int test_sphere_intersection_two_points()
+{
+    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
+    struct Ray ray = new_ray(new_point_tuple(0, 0, -5), new_vector_tuple(0, 0, 1));
+
+    float* intersection_t_values = NULL;
+    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+
+    if (num_intersections == 2 && intersection_t_values != NULL)
+    {
+        if (!is_equal_float(intersection_t_values[0], 4.0)) { return -1; }
+        if (!is_equal_float(intersection_t_values[1], 6.0)) { return -2; }
+    }
+    else { return -3; }
+
+    return 1;
+}
+
+int test_sphere_intersection_tangent()
+{
+    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
+    struct Ray ray = new_ray(new_point_tuple(0, 1, -5), new_vector_tuple(0, 0, 1));
+
+    float* intersection_t_values = NULL;
+    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+
+    if (num_intersections == 2 && intersection_t_values != NULL)
+    {
+        if (!is_equal_float(intersection_t_values[0], 5.0)) { return -1; }
+        if (!is_equal_float(intersection_t_values[1], 5.0)) { return -2; }
+    }
+    else { return -3; }
+
+    return 1;
+}
+
+int test_sphere_intersection_miss()
+{
+    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
+    struct Ray ray = new_ray(new_point_tuple(0, 1, -5), new_vector_tuple(0, 0, 1));
+
+    float* intersection_t_values = NULL;
+    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+
+    if (num_intersections != 0) { return -1; }
+
+    return 1;
+}
+
+int test_sphere_intersection_ray_inside_sphere()
+{
+    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
+    struct Ray ray = new_ray(new_point_tuple(0, 0, 0), new_vector_tuple(0, 0, 1));
+
+    float* intersection_t_values = NULL;
+    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+
+    if (num_intersections == 2 && intersection_t_values != NULL)
+    {
+        if (!is_equal_float(intersection_t_values[0], -1.0)) { return -1; }
+        if (!is_equal_float(intersection_t_values[1], 1.0)) { return -2; }
+    }
+    else { return -3; }
+
+    return 1;
+}
+
+int test_sphere_intersection_sphere_behind_ray()
+{
+    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
+    struct Ray ray = new_ray(new_point_tuple(0, 0, 5), new_vector_tuple(0, 0, 1));
+
+    float* intersection_t_values = NULL;
+    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+
+    if (num_intersections == 2 && intersection_t_values != NULL)
+    {
+        if (!is_equal_float(intersection_t_values[0], -6.0)) { return -1; }
+        if (!is_equal_float(intersection_t_values[1], -4.0)) { return -2; }
+    }
+    else { return -3; }
+
+    return 1;
+}
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -1942,6 +2028,51 @@ int chapter_five_tests()
     }
     else {
         printf("test_ray_position() passed.\n");
+    }
+
+    result = test_sphere_intersection_two_points();
+    if (result < 0) {
+        printf("test_sphere_intersection_two_points() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_sphere_intersection_two_points() passed.\n");
+    }
+
+    result = test_sphere_intersection_tangent();
+    if (result < 0) {
+        printf("test_sphere_intersection_tangent() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_sphere_intersection_tangent() passed.\n");
+    }
+
+    result = test_sphere_intersection_miss();
+    if (result < 0) {
+        printf("test_sphere_intersection_miss() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_sphere_intersection_miss() passed.\n");
+    }
+
+    result = test_sphere_intersection_ray_inside_sphere();
+    if (result < 0) {
+        printf("test_sphere_intersection_ray_inside_sphere() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_sphere_intersection_ray_inside_sphere() passed.\n");
+    }
+
+    result = test_sphere_intersection_sphere_behind_ray();
+    if (result < 0) {
+        printf("test_sphere_intersection_sphere_behind_ray() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_sphere_intersection_sphere_behind_ray() passed.\n");
     }
 
     return num_failed;
