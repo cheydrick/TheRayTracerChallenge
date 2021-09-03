@@ -1377,7 +1377,7 @@ int test_sphere_intersection_tangent()
 int test_sphere_intersection_miss()
 {
     struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
-    struct Ray ray = new_ray(new_point_tuple(0, 1, -5), new_vector_tuple(0, 0, 1));
+    struct Ray ray = new_ray(new_point_tuple(0, 2, -5), new_vector_tuple(0, 0, 1));
 
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, intersection_t_values);
