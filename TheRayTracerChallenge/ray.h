@@ -25,3 +25,12 @@ struct Tuple get_ray_direction(struct Ray* ray)
 {
 	return ray->direction;
 }
+
+struct Tuple ray_position(struct Ray *ray, float t)
+{
+	struct Tuple tmp_point;
+
+	tmp_point = add_tuples(ray->origin, mult_tuple_scalar(ray->direction, t));
+
+	return tmp_point;
+}

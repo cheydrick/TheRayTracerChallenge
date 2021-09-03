@@ -1285,11 +1285,57 @@ int test_multiple_transformation()
     if (comp1 != 1) { return -1; }
     else if (comp2 != 1) { return -2; }
     else if (comp3 != 1) { return -3; }
-    else if (comp4 != 1) { debug_print_tuple(chained_rotated_scaled_translated_P1); return -4; }
+    else if (comp4 != 1) { return -4; }
     else return 1;
 }
 
 // Chapter 5 Tests
+
+int test_new_ray()
+{
+    struct Tuple origin = new_point_tuple(1, 2, 3);
+    struct Tuple direction = new_vector_tuple(4, 5, 6);
+    struct Ray ray = new_ray(origin, direction);
+
+    struct Tuple ray_origin = get_ray_origin(&ray);
+    struct Tuple ray_direction = get_ray_direction(&ray);
+
+    int comp1 = is_equal_tuple(origin, ray_origin);
+    int comp2 = is_equal_tuple(direction, ray_direction);
+
+    if (comp1 != 1) { return -1; }
+    else if (comp2 != 1) { return -2; }
+    else return 1;
+
+}
+
+int test_ray_position()
+{
+    struct Tuple origin = new_point_tuple(2, 3, 4);
+    struct Tuple direction = new_vector_tuple(1, 0, 0);
+    struct Ray ray = new_ray(origin, direction);
+
+    struct Tuple expected_P1 = new_point_tuple(2, 3, 4);
+    struct Tuple expected_P2 = new_point_tuple(3, 3, 4);
+    struct Tuple expected_P3 = new_point_tuple(1, 3, 4);
+    struct Tuple expected_P4 = new_point_tuple(4.5, 3, 4);
+
+    struct Tuple P1 = ray_position(&ray, 0);
+    struct Tuple P2 = ray_position(&ray, 1);
+    struct Tuple P3 = ray_position(&ray, -1);
+    struct Tuple P4 = ray_position(&ray, 2.5);
+
+    int comp1 = is_equal_tuple(expected_P1, P1);
+    int comp2 = is_equal_tuple(expected_P2, P2);
+    int comp3 = is_equal_tuple(expected_P3, P3);
+    int comp4 = is_equal_tuple(expected_P4, P4);
+
+    if (comp1 != 1) { return -1; }
+    else if (comp2 != 1) { return -2; }
+    else if (comp3 != 1) { return -3; }
+    else if (comp4 != 1) { return -4; }
+    else return 1;
+}
 
 int chapter_one_tests()
 {
@@ -1880,13 +1926,22 @@ int chapter_five_tests()
     int result = 0;
     int num_failed = 0;
 
-    result = test_translation_matrix();
+    result = test_new_ray();
     if (result < 0) {
-        printf("test_translation_matrix() failed with code: %i\n", result);
+        printf("test_new_ray() failed with code: %i\n", result);
         num_failed++;
     }
     else {
-        printf("test_translation_matrix() passed.\n");
+        printf("test_new_ray() passed.\n");
+    }
+
+    result = test_ray_position();
+    if (result < 0) {
+        printf("test_ray_position() failed with code: %i\n", result);
+        num_failed++;
+    }
+    else {
+        printf("test_ray_position() passed.\n");
     }
 
     return num_failed;
