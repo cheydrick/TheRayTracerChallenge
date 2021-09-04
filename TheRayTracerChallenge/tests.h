@@ -1351,10 +1351,14 @@ int test_sphere_intersection_two_points()
         return -1;
     }
 
+    float t1 = intersection_t_values[0];
+    float t2 = intersection_t_values[1];
+    free(intersection_t_values);
+
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
-        if (!is_equal_float(intersection_t_values[0], 4.0)) { return -2; }
-        if (!is_equal_float(intersection_t_values[1], 6.0)) { return -3; }
+        if (!is_equal_float(t1, 4.0)) { return -2; }
+        if (!is_equal_float(t2, 6.0)) { return -3; }
     }
     else { return -4; }
 
@@ -1369,12 +1373,22 @@ int test_sphere_intersection_tangent()
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
+    if (intersection_t_values == NULL)
+    {
+        printf("intersection_t_values is null.\n");
+        return -1;
+    }
+
+    float t1 = intersection_t_values[0];
+    float t2 = intersection_t_values[1];
+    free(intersection_t_values);
+
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
-        if (!is_equal_float(intersection_t_values[0], 5.0)) { return -1; }
-        if (!is_equal_float(intersection_t_values[1], 5.0)) { return -2; }
+        if (!is_equal_float(t1, 5.0)) { return -2; }
+        if (!is_equal_float(t2, 5.0)) { return -3; }
     }
-    else { return -3; }
+    else { return -4; }
 
     return 1;
 }
@@ -1400,10 +1414,20 @@ int test_sphere_intersection_ray_inside_sphere()
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
+    if (intersection_t_values == NULL)
+    {
+        printf("intersection_t_values is null.\n");
+        return -1;
+    }
+
+    float t1 = intersection_t_values[0];
+    float t2 = intersection_t_values[1];
+    free(intersection_t_values);
+
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
-        if (!is_equal_float(intersection_t_values[0], -1.0)) { return -1; }
-        if (!is_equal_float(intersection_t_values[1], 1.0)) { return -2; }
+        if (!is_equal_float(t1, -1.0)) { return -2; }
+        if (!is_equal_float(t2, 1.0)) { return -3; }
     }
     else { return -3; }
 
@@ -1418,10 +1442,20 @@ int test_sphere_intersection_sphere_behind_ray()
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
+    if (intersection_t_values == NULL)
+    {
+        printf("intersection_t_values is null.\n");
+        return -1;
+    }
+
+    float t1 = intersection_t_values[0];
+    float t2 = intersection_t_values[1];
+    free(intersection_t_values);
+
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
-        if (!is_equal_float(intersection_t_values[0], -6.0)) { return -1; }
-        if (!is_equal_float(intersection_t_values[1], -4.0)) { return -2; }
+        if (!is_equal_float(t1, -6.0)) { return -2; }
+        if (!is_equal_float(t2, -4.0)) { return -3; }
     }
     else { return -3; }
 
