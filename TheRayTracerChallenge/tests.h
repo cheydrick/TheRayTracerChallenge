@@ -1344,14 +1344,19 @@ int test_sphere_intersection_two_points()
     struct Ray ray = new_ray(new_point_tuple(0, 0, -5), new_vector_tuple(0, 0, 1));
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
+    if (intersection_t_values == NULL)
+    {
+        printf("intersection_t_values is null.\n");
+        return -1;
+    }
 
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
-        if (!is_equal_float(intersection_t_values[0], 4.0)) { return -1; }
-        if (!is_equal_float(intersection_t_values[1], 6.0)) { return -2; }
+        if (!is_equal_float(intersection_t_values[0], 4.0)) { return -2; }
+        if (!is_equal_float(intersection_t_values[1], 6.0)) { return -3; }
     }
-    else { return -3; }
+    else { return -4; }
 
     return 1;
 }
@@ -1362,7 +1367,7 @@ int test_sphere_intersection_tangent()
     struct Ray ray = new_ray(new_point_tuple(0, 1, -5), new_vector_tuple(0, 0, 1));
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
@@ -1380,7 +1385,7 @@ int test_sphere_intersection_miss()
     struct Ray ray = new_ray(new_point_tuple(0, 2, -5), new_vector_tuple(0, 0, 1));
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
     if (num_intersections != 0) { return -1; }
 
@@ -1393,7 +1398,7 @@ int test_sphere_intersection_ray_inside_sphere()
     struct Ray ray = new_ray(new_point_tuple(0, 0, 0), new_vector_tuple(0, 0, 1));
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
     if (num_intersections == 2 && intersection_t_values != NULL)
     {
@@ -1411,7 +1416,7 @@ int test_sphere_intersection_sphere_behind_ray()
     struct Ray ray = new_ray(new_point_tuple(0, 0, 5), new_vector_tuple(0, 0, 1));
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, intersection_t_values);
+    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
 
     if (num_intersections == 2 && intersection_t_values != NULL)
     {

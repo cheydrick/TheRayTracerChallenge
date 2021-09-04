@@ -19,7 +19,7 @@ struct Sphere new_sphere(struct Tuple origin, float radius, int id)
 	return tmp_sphere;
 }
 
-int intersect(struct Sphere* sphere, struct Ray* ray, float *t_intersections)
+int intersect(struct Sphere* sphere, struct Ray* ray, float **t_intersections)
 {
 	// Calculate the discriminant
 	struct Tuple vec_sphere_to_ray = subtract_tuples(ray->origin, sphere->origin);
@@ -32,11 +32,21 @@ int intersect(struct Sphere* sphere, struct Ray* ray, float *t_intersections)
 
 	if (discriminant < 0)
 	{
-		t_intersections = NULL;
+		*t_intersections = NULL;
 		return 0;
 	}
 
-	// TEMP WHILE WRITING TESTS
-	t_intersections = NULL;
+	else
+	{
+		*t_intersections = (float*)malloc(sizeof(float) * 2);
+		float t1 = ((-1.0 * b) - sqrt(discriminant)) / (2.0 * a);
+		float t2 = ((-1.0 * b) + sqrt(discriminant)) / (2.0 * a);
+
+		(*t_intersections)[0] = t1;
+		(*t_intersections)[1] = t2;
+
+		return 2;
+	}
+
 	return -1;
 }
