@@ -307,7 +307,7 @@ int test_projectile()
 }
 
 // Chapter 2 Tests
-
+/*
 int test_new_color()
 {
     struct Color color = new_color(-0.5, 0.4, 1.7);
@@ -1461,7 +1461,7 @@ int test_sphere_intersection_sphere_behind_ray()
 
     return 1;
 }
-
+*/
 int chapter_one_tests()
 {
     int result = 0;
@@ -1625,7 +1625,7 @@ int chapter_one_tests()
 
     return num_failed;
 }
-
+/*
 int chapter_two_tests()
 {
     int result = 0;
@@ -2116,3 +2116,4 @@ int chapter_five_tests()
 
     return num_failed;
 }
+*/
