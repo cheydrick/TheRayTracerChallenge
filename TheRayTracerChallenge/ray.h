@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include "tuple.h"
 
@@ -34,3 +35,4 @@ struct Tuple ray_position(struct Ray *ray, float t)
 
 	return tmp_point;
 }
+*/

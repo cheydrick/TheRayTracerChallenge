@@ -18,12 +18,12 @@
 
 int test_is_equal_tuple()
 {
-    struct Tuple tuple_a = new_tuple(4.3, -4.2, 3.1, 1.0);
-    struct Tuple tuple_b = new_tuple(4.3, -4.2, 3.1, 1.0);
-    struct Tuple tuple_c = new_tuple(1.1, -2.2, 3.1, 1.0);
+    struct Tuple tuple_a; new_tuple(&tuple_a, 4.3, -4.2, 3.1, 1.0);
+    struct Tuple tuple_b; new_tuple(&tuple_b, 4.3, -4.2, 3.1, 1.0);
+    struct Tuple tuple_c; new_tuple(&tuple_c, 1.1, -2.2, 3.1, 1.0);
 
-    if (!is_equal_tuple(tuple_a, tuple_b)) { return -1; }
-    if (is_equal_tuple(tuple_a, tuple_c)) { return -2; }
+    if (!is_equal_tuple(&tuple_a, &tuple_b)) { return -1; }
+    if (is_equal_tuple(&tuple_a, &tuple_c)) { return -2; }
 
     return 1;
 }
@@ -31,13 +31,13 @@ int test_is_equal_tuple()
 int test_new_tuple_is_point()
 {
     struct Tuple tuple;
-    tuple = new_tuple(4.3, -4.2, 3.1, 1.0);
+    new_tuple(&tuple, 4.3, -4.2, 3.1, 1.0);
     if (!is_equal_float(tuple.x, 4.3)) { return -1; }
     if (!is_equal_float(tuple.y, -4.2)) { return -2; }
     if (!is_equal_float(tuple.z, 3.1)) { return -3; }
     if (!is_equal_float(tuple.w, 1.0)) { return -4; }
-    if (!tuple_is_point(tuple)) { return -5; }
-    if (tuple_is_vector(tuple)) { return -6; }
+    if (!tuple_is_point(&tuple)) { return -5; }
+    if (tuple_is_vector(&tuple)) { return -6; }
 
     return 1;
 }
@@ -45,13 +45,13 @@ int test_new_tuple_is_point()
 int test_new_tuple_is_vector()
 {
     struct Tuple tuple;
-    tuple = new_tuple(4.3, -4.2, 3.1, 0.0);
+    new_tuple(&tuple, 4.3, -4.2, 3.1, 0.0);
     if (!is_equal_float(tuple.x, 4.3)) { return -1; }
     if (!is_equal_float(tuple.y, -4.2)) { return -2; }
     if (!is_equal_float(tuple.z, 3.1)) { return -3; }
     if (!is_equal_float(tuple.w, 0.0)) { return -4; }
-    if (tuple_is_point(tuple)) { return -5; }
-    if (!tuple_is_vector(tuple)) { return -6; }
+    if (tuple_is_point(&tuple)) { return -5; }
+    if (!tuple_is_vector(&tuple)) { return -6; }
 
     return 1;
 }
@@ -59,7 +59,7 @@ int test_new_tuple_is_vector()
 int test_new_point_tuple()
 {
     struct Tuple point_tuple;
-    point_tuple = new_point_tuple(4.3, -4.2, 3.1);
+    new_point_tuple(&point_tuple, 4.3, -4.2, 3.1);
 
     if (!is_equal_float(point_tuple.x, 4.3)) { return -1; }
     if (!is_equal_float(point_tuple.y, -4.2)) { return -2; }
@@ -71,22 +71,22 @@ int test_new_point_tuple()
 
 int test_new_vector_tuple()
 {
-    struct Tuple point_tuple;
-    point_tuple = new_vector_tuple(4.3, -4.2, 3.1);
+    struct Tuple vector_tuple;
+    new_vector_tuple(&vector_tuple, 4.3, -4.2, 3.1);
 
-    if (!is_equal_float(point_tuple.x, 4.3)) { return -1; }
-    if (!is_equal_float(point_tuple.y, -4.2)) { return -2; }
-    if (!is_equal_float(point_tuple.z, 3.1)) { return -3; }
-    if (!is_equal_float(point_tuple.w, 0.0)) { return -4; }
+    if (!is_equal_float(vector_tuple.x, 4.3)) { return -1; }
+    if (!is_equal_float(vector_tuple.y, -4.2)) { return -2; }
+    if (!is_equal_float(vector_tuple.z, 3.1)) { return -3; }
+    if (!is_equal_float(vector_tuple.w, 0.0)) { return -4; }
 
     return 1;
 }
 
 int test_add_tuples()
 {
-    struct Tuple a = new_tuple(3, -2, 5, 1);
-    struct Tuple b = new_tuple(-2, 3, 1, 0);
-    struct Tuple tuple = add_tuples(a, b);
+    struct Tuple a; new_tuple(&a, 3, -2, 5, 1);
+    struct Tuple b; new_tuple(&b, -2, 3, 1, 0);
+    struct Tuple tuple; add_tuples(&tuple, &a, &b);
 
     if (!is_equal_float(tuple.x, 1)) { return -1; }
     if (!is_equal_float(tuple.y, 1)) { return -2; }
@@ -98,51 +98,51 @@ int test_add_tuples()
 
 int test_subtract_points()
 {
-    struct Tuple a = new_point_tuple(3, 2, 1);
-    struct Tuple b = new_point_tuple(5, 6, 7);
-    struct Tuple tuple = subtract_tuples(a, b);
+    struct Tuple a; new_point_tuple(&a, 3, 2, 1);
+    struct Tuple b; new_point_tuple(&b, 5, 6, 7);
+    struct Tuple tuple; subtract_tuples(&tuple, &a, &b);
 
     if (!is_equal_float(tuple.x, -2)) { return -1; }
     if (!is_equal_float(tuple.y, -4)) { return -2; }
     if (!is_equal_float(tuple.z, -6)) { return -3; }
-    if (tuple_is_point(tuple)) { return -4; }
+    if (tuple_is_point(&tuple)) { return -4; }
 
     return 1;
 }
 
 int test_subtract_vector_from_point()
 {
-    struct Tuple a = new_point_tuple(3, 2, 1);
-    struct Tuple b = new_vector_tuple(5, 6, 7);
-    struct Tuple tuple = subtract_tuples(a, b);
+    struct Tuple a; new_point_tuple(&a, 3, 2, 1);
+    struct Tuple b; new_vector_tuple(&b, 5, 6, 7);
+    struct Tuple tuple; subtract_tuples(&tuple, &a, &b);
 
     if (!is_equal_float(tuple.x, -2)) { return -1; }
     if (!is_equal_float(tuple.y, -4)) { return -2; }
     if (!is_equal_float(tuple.z, -6)) { return -3; }
-    if (tuple_is_vector(tuple)) { return -4; }
+    if (tuple_is_vector(&tuple)) { return -4; }
 
     return 1;
 }
 
 int test_subtract_vectors()
 {
-    struct Tuple a = new_vector_tuple(3, 2, 1);
-    struct Tuple b = new_vector_tuple(5, 6, 7);
-    struct Tuple tuple = subtract_tuples(a, b);
+    struct Tuple a; new_vector_tuple(&a, 3, 2, 1);
+    struct Tuple b; new_vector_tuple(&b, 5, 6, 7);
+    struct Tuple tuple; subtract_tuples(&tuple, &a, &b);
 
     if (!is_equal_float(tuple.x, -2)) { return -1; }
     if (!is_equal_float(tuple.y, -4)) { return -2; }
     if (!is_equal_float(tuple.z, -6)) { return -3; }
-    if (tuple_is_point(tuple)) { return -4; }
+    if (tuple_is_point(&tuple)) { return -4; }
 
     return 1;
 }
 
 int test_subtract_vector_from_zero_vector()
 {
-    struct Tuple a = new_vector_tuple(0, 0, 0);
-    struct Tuple b = new_vector_tuple(1, -2, 3);
-    struct Tuple tuple = subtract_tuples(a, b);
+    struct Tuple a; new_vector_tuple(&a, 0, 0, 0);
+    struct Tuple b; new_vector_tuple(&b, 1, -2, 3);
+    struct Tuple tuple; subtract_tuples(&tuple, &a, &b);
 
     if (!is_equal_float(tuple.x, -1)) { return -1; }
     if (!is_equal_float(tuple.y, 2)) { return -2; }
@@ -153,8 +153,8 @@ int test_subtract_vector_from_zero_vector()
 
 int test_negate_tuple()
 {
-    struct Tuple a = new_tuple(1, -2, 3, -4);
-    struct Tuple tuple = negate_tuple(a);
+    struct Tuple a; new_tuple(&a, 1, -2, 3, -4);
+    struct Tuple tuple; negate_tuple(&tuple, &a);
 
     if (!is_equal_float(tuple.x, -1)) { return -1; }
     if (!is_equal_float(tuple.y, 2)) { return -2; }
@@ -166,17 +166,17 @@ int test_negate_tuple()
 
 int test_mult_tuple_scalar()
 {
-    struct Tuple a = new_tuple(1, -2, 3, -4);
+    struct Tuple a; new_tuple(&a, 1, -2, 3, -4);
     struct Tuple tuple;
 
-    tuple = mult_tuple_scalar(a, 3.5);
+    mult_tuple_scalar(&tuple, &a, 3.5);
 
     if (!is_equal_float(tuple.x, 3.5)) { return -1; }
     if (!is_equal_float(tuple.y, -7)) { return -2; }
     if (!is_equal_float(tuple.z, 10.5)) { return -3; }
     if (!is_equal_float(tuple.w, -14)) { return -4; }
 
-    tuple = mult_tuple_scalar(a, 0.5);
+    mult_tuple_scalar(&tuple, &a, 0.5);
 
     if (!is_equal_float(tuple.x, 0.5)) { return -5; }
     if (!is_equal_float(tuple.y, -1)) { return -6; }
@@ -188,10 +188,10 @@ int test_mult_tuple_scalar()
 
 int test_div_tuple_scalar()
 {
-    struct Tuple a = new_tuple(1, -2, 3, -4);
+    struct Tuple a; new_tuple(&a, 1, -2, 3, -4);
     struct Tuple tuple;
 
-    tuple = div_tuple_scalar(a, 2);
+    div_tuple_scalar(&tuple, &a, 2);
 
     if (!is_equal_float(tuple.x, 0.5)) { return -1; }
     if (!is_equal_float(tuple.y, -1)) { return -2; }
@@ -206,58 +206,60 @@ int test_tuple_magnitude()
     struct Tuple a;
     float magnitude;
 
-    a = new_vector_tuple(1, 0, 0);
-    magnitude = tuple_magnitude(a);
+    new_vector_tuple(&a, 1, 0, 0);
+    magnitude = tuple_magnitude(&a);
 
     if (!is_equal_float(magnitude, 1.0)) { return -1; }
 
-    a = new_vector_tuple(0, 1, 0);
-    magnitude = tuple_magnitude(a);
+    new_vector_tuple(&a, 0, 1, 0);
+    magnitude = tuple_magnitude(&a);
 
     if (!is_equal_float(magnitude, 1.0)) { return -2; }
 
-    a = new_vector_tuple(0, 0, 1);
-    magnitude = tuple_magnitude(a);
+    new_vector_tuple(&a, 0, 0, 1);
+    magnitude = tuple_magnitude(&a);
 
     if (!is_equal_float(magnitude, 1.0)) { return -3; }
 
-    a = new_vector_tuple(1, 2, 3);
-    magnitude = tuple_magnitude(a);
+    new_vector_tuple(&a, 1, 2, 3);
+    magnitude = tuple_magnitude(&a);
 
     if (!is_equal_float(magnitude, sqrtf(14.0))) { return -4; }
 
-    a = new_vector_tuple(-1, -2, -3);
-    magnitude = tuple_magnitude(a);
+    new_vector_tuple(&a, -1, -2, -3);
+    magnitude = tuple_magnitude(&a);
 
     if (!is_equal_float(magnitude, sqrtf(14.0))) { return -5; }
 }
 
 int test_normalize_tuple()
 {
-    struct Tuple a = new_vector_tuple(4, 0, 0);
-    struct Tuple tuple = normalize_tuple(a);
+    struct Tuple a; new_vector_tuple(&a, 4, 0, 0);
+    struct Tuple tuple; normalize_tuple(&tuple, &a);
 
-    if (!is_equal_tuple(tuple, new_vector_tuple(1, 0, 0))) { return -1; }
+    struct Tuple tmp; new_vector_tuple(&tmp, 1, 0, 0);
+    if (!is_equal_tuple(&tuple, &tmp)) { return -1; }
 
-    a = new_vector_tuple(1, 2, 3);
-    tuple = normalize_tuple(a);
+    new_vector_tuple(&a, 1, 2, 3);
+    normalize_tuple(&tuple, &a);
 
-    if (!is_equal_tuple(tuple, new_vector_tuple(1 / sqrtf(14), 2 / sqrtf(14), 3 / sqrtf(14)))) { return -2; }
+    new_vector_tuple(&tmp, 1 / sqrtf(14), 2 / sqrtf(14), 3 / sqrtf(14));
+    if (!is_equal_tuple(&tuple, &tmp)) { return -2; }
 
-    a = new_vector_tuple(1, 2, 3);
-    tuple = normalize_tuple(a);
+    new_vector_tuple(&a, 1, 2, 3);
+    normalize_tuple(&tuple, &a);
 
-    if (!is_equal_float(tuple_magnitude(tuple), 1.0)) { return -3; }
+    if (!is_equal_float(tuple_magnitude(&tuple), 1.0)) { return -3; }
 
     return 1;
 }
 
 int test_dot_product()
 {
-    struct Tuple a = new_vector_tuple(1, 2, 3);
-    struct Tuple b = new_vector_tuple(2, 3, 4);
+    struct Tuple a; new_vector_tuple(&a, 1, 2, 3);
+    struct Tuple b; new_vector_tuple(&b, 2, 3, 4);
 
-    float result = dot_product(a, b);
+    float result = dot_product(&a, &b);
 
     if (!is_equal_float(result, 20.0)) { return -1; }
 
@@ -266,22 +268,25 @@ int test_dot_product()
 
 int test_cross_product()
 {
-    struct Tuple a = new_vector_tuple(1, 2, 3);
-    struct Tuple b = new_vector_tuple(2, 3, 4);
+    struct Tuple a; new_vector_tuple(&a, 1, 2, 3);
+    struct Tuple b; new_vector_tuple(&b, 2, 3, 4);
 
-    struct Tuple tuple = cross_product(a, b);
+    struct Tuple tuple;
+    cross_product(&tuple, &a, &b);
 
-    if (!is_equal_tuple(tuple, new_vector_tuple(-1, 2, -1))) { return -1; }
+    struct Tuple tmp; new_vector_tuple(&tmp, -1, 2, -1);
+    if (!is_equal_tuple(&tuple, &tmp)) { return -1; }
 
-    tuple = cross_product(b, a);
+    cross_product(&tuple, &b, &a);
 
-    if (!is_equal_tuple(tuple, new_vector_tuple(1, -2, 1))) { return -2; }
+    new_vector_tuple(&tmp, 1, -2, 1);
+    if (!is_equal_tuple(&tuple, &tmp)) { return -2; }
 }
 
 // Chapter 1 "Putting It Together" exercise
 struct Projectile { struct Tuple position_point; struct Tuple velocity_vector; };
 struct Environment { struct Tuple gravity_vector; struct Tuple wind_vector; };
-
+/*
 struct Projectile tick(struct Environment env, struct Projectile proj)
 {
     struct Projectile updated_proj;
@@ -305,6 +310,7 @@ int test_projectile()
 
     return 1;
 }
+*/
 
 // Chapter 2 Tests
 /*

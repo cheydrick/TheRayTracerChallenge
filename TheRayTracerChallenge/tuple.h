@@ -9,34 +9,32 @@ struct Tuple {
     float w;
 };
 
-void debug_print_tuple(struct Tuple tuple)
+void debug_print_tuple(struct Tuple *tuple)
 {
-    printf("x: %f y: %f z: %f w: %f\n", tuple.x, tuple.y, tuple.z, tuple.w);
+    printf("x: %f y: %f z: %f w: %f\n", tuple->x, tuple->y, tuple->z, tuple->w);
 }
 
 // Functions for creating new tuples, points, and vectors
-struct Tuple new_tuple(float x, float y, float z, float w)
+int new_tuple(struct Tuple *tuple, float x, float y, float z, float w)
 {
-    struct Tuple tuple;
-    tuple.x = x;
-    tuple.y = y;
-    tuple.z = z;
-    tuple.w = w;
+    tuple->x = x;
+    tuple->y = y;
+    tuple->z = z;
+    tuple->w = w;
 
-    return tuple;
+    return 1;
 }
 
-struct Tuple new_point_tuple(float x, float y, float z)
+int new_point_tuple(struct Tuple *tuple, float x, float y, float z)
 {
-    struct Tuple point;
-    point = new_tuple(x, y, z, 1.0);
+    new_tuple(tuple, x, y, z, 1.0);
 
-    return point;
+    return 1;
 }
 
-int tuple_is_point(struct Tuple point)
+int tuple_is_point(struct Tuple *point)
 {
-    if (is_equal_float(point.w, 1.0))
+    if (is_equal_float(point->w, 1.0))
     {
         return 1;
     }
@@ -46,17 +44,16 @@ int tuple_is_point(struct Tuple point)
     }
 }
 
-struct Tuple new_vector_tuple(float x, float y, float z)
+int new_vector_tuple(struct Tuple *tuple, float x, float y, float z)
 {
-    struct Tuple vector;
-    vector = new_tuple(x, y, z, 0.0);
+    new_tuple(tuple, x, y, z, 0.0);
 
-    return vector;
+    return 1;
 }
 
-int tuple_is_vector(struct Tuple vector)
+int tuple_is_vector(struct Tuple *vector)
 {
-    if (is_equal_float(vector.w, 0.0))
+    if (is_equal_float(vector->w, 0.0))
     {
         return 1;
     }
@@ -67,88 +64,83 @@ int tuple_is_vector(struct Tuple vector)
 }
 
 // Operations on tuples
-int is_equal_tuple(struct Tuple a, struct Tuple b)
+int is_equal_tuple(struct Tuple *a, struct Tuple *b)
 {
-    if (!is_equal_float(a.x, b.x)) { return 0; }
-    if (!is_equal_float(a.y, b.y)) { return 0; }
-    if (!is_equal_float(a.z, b.z)) { return 0; }
-    if (!is_equal_float(a.w, b.w)) { return 0; }
+    if (!is_equal_float(a->x, b->x)) { return 0; }
+    if (!is_equal_float(a->y, b->y)) { return 0; }
+    if (!is_equal_float(a->z, b->z)) { return 0; }
+    if (!is_equal_float(a->w, b->w)) { return 0; }
 
     return 1;
 }
 
-struct Tuple add_tuples(struct Tuple a, struct Tuple b)
+int add_tuples(struct Tuple *sum, struct Tuple *a, struct Tuple *b)
 {
-    struct Tuple tuple;
-    tuple = new_tuple(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w);
+    new_tuple(sum, a->x + b->x, a->y + b->y, a->z + b->z, a->w + b->w);
 
-    return tuple;
+    return 1;
 }
 
-struct Tuple subtract_tuples(struct Tuple a, struct Tuple b)
+int subtract_tuples(struct Tuple *difference, struct Tuple *a, struct Tuple *b)
 {
-    struct Tuple tuple;
-    tuple = new_tuple(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
+    new_tuple(difference, a->x - b->x, a->y - b->y, a->z - b->z, a->w - b->w);
 
-    return tuple;
+    return 1;
 }
 
-struct Tuple negate_tuple(struct Tuple a)
+int negate_tuple(struct Tuple *neg, struct Tuple *a)
 {
-    struct Tuple tuple;
-    tuple = new_tuple(0.0 - a.x, 0.0 - a.y, 0.0 - a.z, 0.0 - a.w);
+    new_tuple(neg, 0.0 - a->x, 0.0 - a->y, 0.0 - a->z, 0.0 - a->w);
 
-    return tuple;
+    return 1;
 }
 
-struct Tuple mult_tuple_scalar(struct Tuple a, float scalar)
+int mult_tuple_scalar(struct Tuple *product, struct Tuple *a, float scalar)
 {
-    struct Tuple tuple;
-    tuple = new_tuple(a.x * scalar, a.y * scalar, a.z * scalar, a.w * scalar);
+    new_tuple(product, a->x * scalar, a->y * scalar, a->z * scalar, a->w * scalar);
 
-    return tuple;
+    return 1;
 }
 
-struct Tuple div_tuple_scalar(struct Tuple a, float scalar)
+int div_tuple_scalar(struct Tuple *quotient, struct Tuple *a, float scalar)
 {
-    struct Tuple tuple;
-    tuple = new_tuple(a.x / scalar, a.y / scalar, a.z / scalar, a.w / scalar);
+    new_tuple(quotient, a->x / scalar, a->y / scalar, a->z / scalar, a->w / scalar);
 
-    return tuple;
+    return 1;
 }
 
-float tuple_magnitude(struct Tuple a)
+float tuple_magnitude(struct Tuple *a)
 {
     float magnitude;
 
-    magnitude = sqrtf((a.x * a.x) + (a.y * a.y) + (a.z * a.z) + (a.w * a.w));
+    magnitude = sqrtf((a->x * a->x) + (a->y * a->y) + (a->z * a->z) + (a->w * a->w));
 
     return magnitude;
 }
 
-struct Tuple normalize_tuple(struct Tuple a)
+int normalize_tuple(struct Tuple *norm, struct Tuple *a)
 {
     float magnitude = tuple_magnitude(a);
 
-    struct Tuple tuple = new_tuple((a.x / magnitude), (a.y / magnitude), (a.z / magnitude), (a.w / magnitude));
+    new_tuple(norm, (a->x / magnitude), (a->y / magnitude), (a->z / magnitude), (a->w / magnitude));
 
-    return tuple;
+    return 1;
 }
 
-float dot_product(struct Tuple a, struct Tuple b)
+float dot_product(struct Tuple *a, struct Tuple *b)
 {
-    float dot_product = (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
+    float dot_product = (a->x * b->x) + (a->y * b->y) + (a->z * b->z) + (a->w * b->w);
 
     return dot_product;
 }
 
-struct Tuple cross_product(struct Tuple a, struct Tuple b)
+int cross_product(struct Tuple *product, struct Tuple *a, struct Tuple *b)
 {
-    float x = (a.y * b.z) - (a.z * b.y);
-    float y = (a.z * b.x) - (a.x * b.z);
-    float z = (a.x * b.y) - (a.y * b.x);
+    float x = (a->y * b->z) - (a->z * b->y);
+    float y = (a->z * b->x) - (a->x * b->z);
+    float z = (a->x * b->y) - (a->y * b->x);
 
-    struct Tuple tuple = new_vector_tuple(x, y, z);
+    new_vector_tuple(product, x, y, z);
 
-    return tuple;
+    return 1;
 }

@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include "tuple.h"
 #include "ray.h"
@@ -50,3 +51,4 @@ int intersect(struct Sphere* sphere, struct Ray* ray, float **t_intersections)
 
 	return -1;
 }
+*/

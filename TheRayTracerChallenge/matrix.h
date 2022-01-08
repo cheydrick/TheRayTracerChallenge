@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include <stdio.h>
 #include <string.h>
@@ -573,3 +574,4 @@ void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 		printf("\n");
 	}
 }
+*/
