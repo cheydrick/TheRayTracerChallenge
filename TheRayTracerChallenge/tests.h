@@ -983,7 +983,7 @@ int test_inverse_4x4_matrix_multiplication()
     else return 1;
 }
 
-// Chapter 3 Tests
+// Chapter 4 Tests
 int test_translation_matrix()
 {
     struct Matrix T = new_translation_matrix(5, -3, 2);
