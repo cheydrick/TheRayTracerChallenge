@@ -527,12 +527,12 @@ int test_ppm_data_long()
     return 1;
 }
 
-/*
+
 
 // Chapter 3 Tests
 int test_4x4_matrix()
 {
-    Matrix m = new_matrix(4, 4);
+    Matrix m; new_matrix(&m, 4, 4);
     set_matrix_element(&m, 0, 0, 1); set_matrix_element(&m, 0, 1, 2); set_matrix_element(&m, 0, 2, 3); set_matrix_element(&m, 0, 3, 4);
     set_matrix_element(&m, 1, 0, 5.5); set_matrix_element(&m, 1, 1, 6.5); set_matrix_element(&m, 1, 2, 7.5); set_matrix_element(&m, 1, 3, 8.5);
     set_matrix_element(&m, 2, 0, 9); set_matrix_element(&m, 2, 1, 10); set_matrix_element(&m, 2, 2, 11); set_matrix_element(&m, 2, 3, 12);
@@ -553,7 +553,7 @@ int test_4x4_matrix()
 
 int test_2x2_matrix()
 {
-    Matrix m = new_matrix(2, 2);
+    Matrix m; new_matrix(&m, 2, 2);
     set_matrix_element(&m, 0, 0, -3); set_matrix_element(&m, 0, 1, 5); 
     set_matrix_element(&m, 1, 0, 1); set_matrix_element(&m, 1, 1, -2);
 
@@ -569,7 +569,7 @@ int test_2x2_matrix()
 
 int test_3x3_matrix()
 {
-    Matrix m = new_matrix(3, 3);
+    Matrix m; new_matrix(&m, 3, 3);
     set_matrix_element(&m, 0, 0, -3); set_matrix_element(&m, 0, 1, 5); set_matrix_element(&m, 0, 2, 0);
     set_matrix_element(&m, 1, 0, 1); set_matrix_element(&m, 1, 1, -2); set_matrix_element(&m, 1, 2, -7);
     set_matrix_element(&m, 2, 0, 0); set_matrix_element(&m, 2, 1, 1); set_matrix_element(&m, 2, 2, 1);
@@ -586,7 +586,7 @@ int test_3x3_matrix()
 int test_new_matrix_4x4()
 {
     float values[16] = { 1, 2, 3, 4, 5.5, 6.5, 7.5, 8.5, 9, 10, 11, 12, 13.5, 14.5, 15.5, 16.5 };
-    Matrix m = new_matrix_4x4(values);
+    Matrix m; new_matrix_4x4(&m, values);
 
     float elem = 0; int error = 0;
     if (!is_equal_float(1, get_matrix_element(&m, 0, 0, &error))) { return -1; }
@@ -604,7 +604,7 @@ int test_new_matrix_4x4()
 int test_new_matrix_2x2()
 {
     float values[16] = { -3, 5, 1, -2 };
-    Matrix m = new_matrix_2x2(values);
+    Matrix m; new_matrix_2x2(&m, values);
 
     float elem = 0; int error = 0;
     if (!is_equal_float(-3, get_matrix_element(&m, 0, 0, &error))) { return -1; }
@@ -619,7 +619,7 @@ int test_new_matrix_2x2()
 int test_new_matrix_3x3()
 {
     float values[16] = { -3, 5, 0, 1, -2, -7, 0, 1, 1 };
-    Matrix m = new_matrix_3x3(values);
+    Matrix m; new_matrix_3x3(&m, values);
 
     float elem = 0; int error = 0;
     if (!is_equal_float(-3, get_matrix_element(&m, 0, 0, &error))) { return -1; }
@@ -635,8 +635,8 @@ int test_is_equal_matrix()
     float a_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
     float b_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
 
-    Matrix A = new_matrix_4x4(a_values);
-    Matrix B = new_matrix_4x4(b_values);
+    Matrix A; new_matrix_4x4(&A, a_values);
+    Matrix B; new_matrix_4x4(&B, b_values);
 
     if (is_equal_matrix(4, 4, &A, &B) != 1) { return -1; }
 
@@ -646,8 +646,8 @@ int test_is_equal_matrix()
     float c_values[16] = { 1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2 };
     float d_values[16] = { 2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1 };
 
-    Matrix C = new_matrix_4x4(c_values);
-    Matrix D = new_matrix_4x4(d_values);
+    Matrix C; new_matrix_4x4(&C, c_values);
+    Matrix D; new_matrix_4x4(&D, d_values);
 
     if (is_equal_matrix(4, 4, &C, &D) != 0) { return -2; }
 
@@ -663,12 +663,13 @@ int test_mult_4x4_matrices()
     float b_values[16] = { -2,1,2,3,3,2,1,-1,4,3,6,5,1,2,7,8 };
     float p_values[16] = { 20,22,50,48,44,54,114,108,40,58,110,102,16,26,46,42 };
 
-    Matrix A = new_matrix_4x4(a_values);
-    Matrix B = new_matrix_4x4(b_values);
-    Matrix P = new_matrix_4x4(p_values);
+    Matrix A; new_matrix_4x4(&A, a_values);
+    Matrix B; new_matrix_4x4(&B, b_values);
+    Matrix P; new_matrix_4x4(&P, p_values);
 
     int error = 0;
-    Matrix T = mult_4x4_matrices(&A, &B, &error);
+    Matrix T;
+    error = mult_4x4_matrices(&A, &B, &T);
 
     if (error != 1) { return -1; }
     if (is_equal_matrix(4, 4, &P, &T) != 1) { return -2; }
@@ -683,11 +684,12 @@ int test_mult_4x4_matrix_tuple()
 {
     float a_values[16] = { 1,2,3,4,2,4,4,2,8,6,4,1,0,0,0,1 };
 
-    Matrix A = new_matrix_4x4(a_values);
-    Tuple B = new_tuple(1, 2, 3, 1);
+    Matrix A; new_matrix_4x4(&A, a_values);
+    Tuple B; new_tuple(&B, 1, 2, 3, 1);
 
     int error = 0;
-    Tuple P = mult_4x4_matrix_tuple(&A, &B, &error);
+    Tuple P;
+    error = mult_4x4_matrix_tuple(&A, &B, &P);
 
     free_matrix(&A);
 
@@ -702,11 +704,12 @@ int test_mult_4x4_matrix_tuple()
 int test_new_matrix_4x4_identity()
 {
     float a_values[16] = { 0,1,2,4,1,2,4,8,2,4,8,16,4,8,16,32 };
-    Matrix A = new_matrix_4x4(a_values);
-    Matrix I = new_matrix_4x4_identity();
+    Matrix A; new_matrix_4x4(&A, a_values);
+    Matrix I; new_matrix_4x4_identity(&I);
 
     int error = 0;
-    Matrix P = mult_4x4_matrices(&A, &I, &error);
+    Matrix P;
+    error = mult_4x4_matrices(&A, &I, &P);
 
     int comp = is_equal_matrix(4, 4, &A, &P);
 
@@ -722,11 +725,12 @@ int test_transpose_4x4_matrix()
 {
     float a_values[16] = { 0,9,3,0,9,8,0,8,1,8,5,3,0,0,5,8 };
     float b_values[16] = { 0,9,1,0,9,8,8,0,3,0,5,5,0,8,3,8 };
-    Matrix A = new_matrix_4x4(a_values);
-    Matrix B = new_matrix_4x4(b_values);
+    Matrix A; new_matrix_4x4(&A, a_values);
+    Matrix B; new_matrix_4x4(&B, b_values);
     
     int error = 0;
-    Matrix T = transpose_4x4_matrix(&A, &error);
+    Matrix T;
+    error = transpose_4x4_matrix(&A, &T);
     int comp = is_equal_matrix(4, 4, &B, &T);
 
     free_matrix(&A);
@@ -741,7 +745,7 @@ int test_det_2x2_matrix()
 {
     float a_values[4] = { 1,5,-3,2 };
 
-    Matrix A = new_matrix_2x2(a_values);
+    Matrix A; new_matrix_2x2(&A, a_values);
 
     int error = 0;
     float det = det_2x2_matrix(&A, &error);
@@ -756,12 +760,13 @@ int test_det_2x2_matrix()
 int test_submatrix_3x3()
 {
     float a_values[9] = { 1,5,0,-3,2,7,0,6,-3 };
-    struct Matrix A = new_matrix_3x3(a_values);
+    struct Matrix A; new_matrix_3x3(&A, a_values);
     float b_values[4] = { -3,2,0,6 };
-    struct Matrix B = new_matrix_2x2(b_values);
+    struct Matrix B; new_matrix_2x2(&B, b_values);
     
     int error = 0;
-    struct Matrix S = submatrix_3x3(&A, 0, 2, &error);
+    struct Matrix S; 
+    error = submatrix_3x3(&A,&S, 0, 2);
 
     int comp = is_equal_matrix(2, 2, &B, &S);
     
@@ -776,12 +781,12 @@ int test_submatrix_3x3()
 int test_submatrix_4x4()
 {
     float a_values[16] = {-6, 1, 1, 6, -8, 5, 8, 6, -1, 0, 8, 2, -7, 1, -1, 1};
-    struct Matrix A = new_matrix_4x4(a_values);
+    struct Matrix A; new_matrix_4x4(&A, a_values);
     float b_values[9] = {-6, 1, 6, -8, 8, 6, -7, -1, 1};
-    struct Matrix B = new_matrix_3x3(b_values);
+    struct Matrix B;  new_matrix_3x3(&B, b_values);
 
     int error = 0;
-    struct Matrix S = submatrix_4x4(&A, 2, 1, &error);
+    struct Matrix S; error = submatrix_4x4(&A, &S, 2, 1);
 
     int comp = is_equal_matrix(3, 3, &B, &S);
 
@@ -796,7 +801,7 @@ int test_submatrix_4x4()
 int test_minor_3x3_matrix()
 {
     float a_values[9] = { 3,5,0,2,-1,-7,6,-1,5 };
-    struct Matrix A = new_matrix_3x3(a_values);
+    struct Matrix A; new_matrix_3x3(&A, a_values);
 
     int error = 0;
     float minor = minor_3x3_matrix(&A, 1, 0, &error);
@@ -811,7 +816,7 @@ int test_minor_3x3_matrix()
 int test_cofactor_3x3_matrix()
 {
     float a_values[9] = { 3,5,0,2,-1,-7,6,-1,5 };
-    struct Matrix A = new_matrix_3x3(a_values);
+    struct Matrix A; new_matrix_3x3(&A, a_values);
 
     int error = 0;
     
@@ -838,7 +843,7 @@ int test_cofactor_3x3_matrix()
 int test_det_3x3_matrix()
 {
     float a_values[9] = {1,2,6,-5,8,-4,2,6,4};
-    struct Matrix A = new_matrix_3x3(a_values);
+    struct Matrix A; new_matrix_3x3(&A, a_values);
 
     int error = 0;
     float c1 = cofactor_3x3_matrix(&A, 0, 0, &error);
@@ -860,7 +865,7 @@ int test_det_3x3_matrix()
 int test_det_4x4_matrix()
 {
     float a_values[16] = { -2,-8,3,5,-3,1,7,3,1,2,-9,6,-6,7,7,-9 };
-    struct Matrix A = new_matrix_4x4(a_values);
+    struct Matrix A; new_matrix_4x4(&A, a_values);
 
     int error = 0;
     float c1 = cofactor_4x4_matrix(&A, 0, 0, &error);
@@ -885,8 +890,8 @@ int test_is_invertable_4x4_matrix()
     float a_values[16] = { 6,4,4,4,5,5,7,6,4,-9,3,-7,9,1,7,-6 };
     float b_values[16] = { -4,2,-2,-3,9,6,2,6,0,-5,1,-5,0,0,0,0 };
 
-    struct Matrix A = new_matrix_4x4(a_values);
-    struct Matrix B = new_matrix_4x4(b_values);
+    struct Matrix A; new_matrix_4x4(&A, a_values);
+    struct Matrix B; new_matrix_4x4(&B, b_values);
 
     unsigned int is_invertable_A = 0;
     unsigned int is_invertable_B = 0;
@@ -907,16 +912,16 @@ int test_is_invertable_4x4_matrix()
 int test_inverse_4x4_matrix()
 {
     float a_values[16] = { -5,2,6,-8,1,-5,1,8,7,7,-6,-7,1,-3,7,4 };
-    struct Matrix A = new_matrix_4x4(a_values);
+    struct Matrix A; new_matrix_4x4(&A, a_values);
 
     float expected_inverse_values[16] = { 0.21805, 0.45113, 0.24060, -0.04511, -0.80827, -1.45677, -0.44361, 0.52068, -0.07895, -0.22368, -0.05263, 0.19737, -0.52256, -0.81391, -0.30075, 0.30639 };
-    struct Matrix expected_inverse_A = new_matrix_4x4(expected_inverse_values);
+    struct Matrix expected_inverse_A; new_matrix_4x4(&expected_inverse_A, expected_inverse_values);
 
     int error = 0;
     float det = det_4x4_matrix(&A, &error);
     float c1 = cofactor_4x4_matrix(&A, 2, 3, &error);
 
-    struct Matrix inverse_A = inverse_4x4_matrix(&A, &error);
+    struct Matrix inverse_A; inverse_4x4_matrix(&A, &inverse_A);
     float inverse_A_3_2 = get_matrix_element(&inverse_A, 3, 2, &error);
     float c2 = cofactor_4x4_matrix(&A, 3, 2, &error);
     float inverse_A_2_3 = get_matrix_element(&inverse_A, 2, 3, &error);
@@ -944,12 +949,12 @@ int test_inverse_4x4_matrix_extra()
     float expected_inverse_b_values[16] = { -0.04074, -0.07778, 0.14444, -0.22222, -0.07778, 0.03333, 0.36667, -0.33333, -0.02901, -0.14630, -0.10926, 0.12963, 0.17778, 0.06667, -0.26667, 0.33333 };
 
     int error = 0;
-    struct Matrix A = new_matrix_4x4(a_values);
-    struct Matrix B = new_matrix_4x4(b_values);
-    struct Matrix expected_inverse_A = new_matrix_4x4(expected_inverse_a_values);
-    struct Matrix expected_inverse_B = new_matrix_4x4(expected_inverse_b_values);
-    struct Matrix inverse_A = inverse_4x4_matrix(&A, &error);
-    struct Matrix inverse_B = inverse_4x4_matrix(&B, &error);
+    struct Matrix A; new_matrix_4x4(&A, a_values);
+    struct Matrix B; new_matrix_4x4(&B, b_values);
+    struct Matrix expected_inverse_A; new_matrix_4x4(&expected_inverse_A, expected_inverse_a_values);
+    struct Matrix expected_inverse_B; new_matrix_4x4(&expected_inverse_B, expected_inverse_b_values);
+    struct Matrix inverse_A; inverse_4x4_matrix(&A, &inverse_A);
+    struct Matrix inverse_B; inverse_4x4_matrix(&B, &inverse_B);
 
     free_matrix(&A);
     free_matrix(&B);
@@ -970,14 +975,14 @@ int test_inverse_4x4_matrix_multiplication()
     float a_values[16] = {3,-9,7,3,3,-8,2,-9,-4,4,4,1,-6,5,-1,1};
     float b_values[16] = {8,2,2,2,3,-1,7,0,7,0,5,4,6,-2,0,5};
 
-    struct Matrix A = new_matrix_4x4(a_values);
-    struct Matrix B = new_matrix_4x4(b_values);
+    struct Matrix A; new_matrix_4x4(&A, a_values);
+    struct Matrix B; new_matrix_4x4(&B, b_values);
 
     int error = 0;
-    struct Matrix C = mult_4x4_matrices(&A, &B, &error);
+    struct Matrix C; mult_4x4_matrices(&A, &B, &C);
 
-    struct Matrix inverse_B = inverse_4x4_matrix(&B, &error);
-    struct Matrix C_inverse_B = mult_4x4_matrices(&C, &inverse_B, &error);
+    struct Matrix inverse_B; inverse_4x4_matrix(&B, &inverse_B);
+    struct Matrix C_inverse_B; mult_4x4_matrices(&C, &inverse_B, &C_inverse_B);
 
     int comp = is_equal_matrix(4, 4, &A, &C_inverse_B);
 
@@ -994,13 +999,13 @@ int test_inverse_4x4_matrix_multiplication()
 // Chapter 4 Tests
 int test_translation_matrix()
 {
-    struct Matrix T = new_translation_matrix(5, -3, 2);
-    struct Tuple point = new_point_tuple(-3, 4, 5);
-    struct Tuple expected_transformed_point = new_point_tuple(2, 1, 7);
+    struct Matrix T; new_translation_matrix(&T, 5, -3, 2);
+    struct Tuple point; new_point_tuple(&point, -3, 4, 5);
+    struct Tuple expected_transformed_point; new_point_tuple(&expected_transformed_point, 2, 1, 7);
 
     int error = 0;
-    struct Tuple transformed_point = mult_4x4_matrix_tuple(&T, &point, &error);
-    int comp = is_equal_tuple(expected_transformed_point, transformed_point);
+    struct Tuple transformed_point; mult_4x4_matrix_tuple(&T, &point, &transformed_point);
+    int comp = is_equal_tuple(&expected_transformed_point, &transformed_point);
 
     free_matrix(&T);
 
@@ -1010,15 +1015,15 @@ int test_translation_matrix()
 
 int test_translation_inversion()
 {
-    struct Matrix T = new_translation_matrix(5, -3, 2);
+    struct Matrix T; new_translation_matrix(&T, 5, -3, 2);
     int error = 0;
-    struct Matrix inverse_T = inverse_4x4_matrix(&T, &error);
-    struct Tuple point = new_point_tuple(-3, 4, 5);
-    struct Tuple expected_inverse_point = new_point_tuple(-8, 7, 3);
+    struct Matrix inverse_T; inverse_4x4_matrix(&T, &inverse_T);
+    struct Tuple point; new_point_tuple(&point, -3, 4, 5);
+    struct Tuple expected_inverse_point; new_point_tuple(&expected_inverse_point , -8, 7, 3);
 
-    struct Tuple inverse_point = mult_4x4_matrix_tuple(&inverse_T, &point, &error);
+    struct Tuple inverse_point; mult_4x4_matrix_tuple(&inverse_T, &point, &inverse_point);
 
-    int comp = is_equal_tuple(expected_inverse_point, inverse_point);
+    int comp = is_equal_tuple(&expected_inverse_point, &inverse_point);
 
     free_matrix(&T);
     free_matrix(&inverse_T);
@@ -1029,13 +1034,13 @@ int test_translation_inversion()
 
 int test_translation_vector()
 {
-    struct Matrix T = new_translation_matrix(5, -3, 2);
-    struct Tuple vector = new_vector_tuple(-3, 4, 5);
+    struct Matrix T; new_translation_matrix(&T, 5, -3, 2);
+    struct Tuple vector; new_vector_tuple(&vector, -3, 4, 5);
 
     int error = 0;
-    struct Tuple translated_vector = mult_4x4_matrix_tuple(&T, &vector, &error);
+    struct Tuple translated_vector; mult_4x4_matrix_tuple(&T, &vector, &translated_vector);
 
-    int comp = is_equal_tuple(vector, translated_vector);
+    int comp = is_equal_tuple(&vector, &translated_vector);
 
     free_matrix(&T);
 
@@ -1045,14 +1050,14 @@ int test_translation_vector()
 
 int test_scaling_matrix()
 {
-    struct Matrix S = new_scaling_matrix(2, 3, 4);
-    struct Tuple point = new_point_tuple(-4, 6, 8);
-    struct Tuple expected_scaled_point = new_point_tuple(-8, 18, 32);
+    struct Matrix S; new_scaling_matrix(&S, 2, 3, 4);
+    struct Tuple point; new_point_tuple(&point, -4, 6, 8);
+    struct Tuple expected_scaled_point; new_point_tuple(&expected_scaled_point, -8, 18, 32);
 
     int error = 0;
-    struct Tuple scaled_point = mult_4x4_matrix_tuple(&S, &point, &error);
+    struct Tuple scaled_point; mult_4x4_matrix_tuple(&S, &point, &scaled_point);
 
-    int comp = is_equal_tuple(expected_scaled_point, scaled_point);
+    int comp = is_equal_tuple(&expected_scaled_point, &scaled_point);
 
     free_matrix(&S);
 
@@ -1062,14 +1067,14 @@ int test_scaling_matrix()
 
 int test_scaling_vector()
 {
-    struct Matrix S = new_scaling_matrix(2, 3, 4);
-    struct Tuple vector = new_vector_tuple(-4, 6, 8);
-    struct Tuple expected_scaled_vector = new_vector_tuple(-8, 18, 32);
+    struct Matrix S; new_scaling_matrix(&S, 2, 3, 4);
+    struct Tuple vector; new_vector_tuple(&vector, -4, 6, 8);
+    struct Tuple expected_scaled_vector; new_vector_tuple(&expected_scaled_vector, -8, 18, 32);
 
     int error = 0;
-    struct Tuple scaled_vector = mult_4x4_matrix_tuple(&S, &vector, &error);
+    struct Tuple scaled_vector; mult_4x4_matrix_tuple(&S, &vector, &scaled_vector);
 
-    int comp = is_equal_tuple(expected_scaled_vector, scaled_vector);
+    int comp = is_equal_tuple(&expected_scaled_vector, &scaled_vector);
 
     free_matrix(&S);
 
@@ -1079,15 +1084,15 @@ int test_scaling_vector()
 
 int test_scaling_inversion()
 {
-    struct Matrix S = new_scaling_matrix(2, 3, 4);
+    struct Matrix S; new_scaling_matrix(&S, 2, 3, 4);
     int error = 0;
-    struct Matrix inverse_S = inverse_4x4_matrix(&S, &error);
-    struct Tuple vector = new_vector_tuple(-4, 6, 8);
-    struct Tuple expected_inverted_scaled_vector = new_vector_tuple(-2, 2, 2);
+    struct Matrix inverse_S; inverse_4x4_matrix(&S, &inverse_S);
+    struct Tuple vector; new_vector_tuple(&vector, -4, 6, 8);
+    struct Tuple expected_inverted_scaled_vector; new_vector_tuple(&expected_inverted_scaled_vector , -2, 2, 2);
 
-    struct Tuple scaled_vector = mult_4x4_matrix_tuple(&inverse_S, &vector, &error);
+    struct Tuple scaled_vector; mult_4x4_matrix_tuple(&inverse_S, &vector, &scaled_vector);
 
-    int comp = is_equal_tuple(expected_inverted_scaled_vector, scaled_vector);
+    int comp = is_equal_tuple(&expected_inverted_scaled_vector, &scaled_vector);
 
     free_matrix(&S);
     free_matrix(&inverse_S);
@@ -1098,14 +1103,14 @@ int test_scaling_inversion()
 
 int test_scaling_reflection()
 {
-    struct Matrix S = new_scaling_matrix(-1, 1, 1);
-    struct Tuple point = new_point_tuple(2, 3, 4);
-    struct Tuple expected_scaled_point = new_point_tuple(-2, 3, 4);
+    struct Matrix S; new_scaling_matrix(&S, -1, 1, 1);
+    struct Tuple point; new_point_tuple(&point, 2, 3, 4);
+    struct Tuple expected_scaled_point; new_point_tuple(&expected_scaled_point, -2, 3, 4);
 
     int error = 0;
-    struct Tuple scaled_point = mult_4x4_matrix_tuple(&S, &point, &error);
+    struct Tuple scaled_point; mult_4x4_matrix_tuple(&S, &point, &scaled_point);
 
-    int comp = is_equal_tuple(expected_scaled_point, scaled_point);
+    int comp = is_equal_tuple(&expected_scaled_point, &scaled_point);
 
     free_matrix(&S);
 
@@ -1115,19 +1120,19 @@ int test_scaling_reflection()
 
 int test_rotation_x_matrix()
 {
-    struct Tuple point = new_point_tuple(0, 1, 0);
-    struct Tuple expected_half_quarter_point = new_point_tuple(0, sqrt(2) / 2, sqrt(2) / 2);
-    struct Tuple expected_full_quarter_point = new_point_tuple(0, 0, 1);
+    struct Tuple point; new_point_tuple(&point, 0, 1, 0);
+    struct Tuple expected_half_quarter_point; new_point_tuple(&expected_half_quarter_point, 0, sqrt(2) / 2, sqrt(2) / 2);
+    struct Tuple expected_full_quarter_point; new_point_tuple(&expected_full_quarter_point, 0, 0, 1);
 
-    struct Matrix half_quarter_x_rotation_matrix = new_rotation_x_matrix(M_PI / 4.0);
-    struct Matrix full_quarter_x_rotation_matrix = new_rotation_x_matrix(M_PI / 2.0);
+    struct Matrix half_quarter_x_rotation_matrix; new_rotation_x_matrix(&half_quarter_x_rotation_matrix, M_PI / 4.0);
+    struct Matrix full_quarter_x_rotation_matrix; new_rotation_x_matrix(&full_quarter_x_rotation_matrix, M_PI / 2.0);
 
     int error = 0;
-    struct Tuple half_quarter_point = mult_4x4_matrix_tuple(&half_quarter_x_rotation_matrix, &point, &error);
-    struct Tuple full_quarter_point = mult_4x4_matrix_tuple(&full_quarter_x_rotation_matrix, &point, &error);
+    struct Tuple half_quarter_point; mult_4x4_matrix_tuple(&half_quarter_x_rotation_matrix, &point, &half_quarter_point);
+    struct Tuple full_quarter_point; mult_4x4_matrix_tuple(&full_quarter_x_rotation_matrix, &point, &full_quarter_point);
 
-    int comp1 = is_equal_tuple(expected_half_quarter_point, half_quarter_point);
-    int comp2 = is_equal_tuple(expected_full_quarter_point, full_quarter_point);
+    int comp1 = is_equal_tuple(&expected_half_quarter_point, &half_quarter_point);
+    int comp2 = is_equal_tuple(&expected_full_quarter_point, &full_quarter_point);
 
     free_matrix(&half_quarter_x_rotation_matrix);
     free_matrix(&full_quarter_x_rotation_matrix);
@@ -1139,16 +1144,16 @@ int test_rotation_x_matrix()
 
 int test_inverse_rotation_x_matrix()
 {
-    struct Tuple point = new_point_tuple(0, 1, 0);
-    struct Tuple expected_inverse_half_quarter_point = new_point_tuple(0, sqrt(2) / 2, -1 * sqrt(2) / 2);
+    struct Tuple point; new_point_tuple(&point, 0, 1, 0);
+    struct Tuple expected_inverse_half_quarter_point; new_point_tuple(&expected_inverse_half_quarter_point, 0, sqrt(2) / 2, -1 * sqrt(2) / 2);
 
-    struct Matrix half_quarter_x_rotation_matrix = new_rotation_x_matrix(M_PI / 4.0);
+    struct Matrix half_quarter_x_rotation_matrix; new_rotation_x_matrix(&half_quarter_x_rotation_matrix, M_PI / 4.0);
     int error = 0;
-    struct Matrix inverse_half_quarter_x_rotation_matrix = inverse_4x4_matrix(&half_quarter_x_rotation_matrix, &error);
+    struct Matrix inverse_half_quarter_x_rotation_matrix; inverse_4x4_matrix(&half_quarter_x_rotation_matrix, &inverse_half_quarter_x_rotation_matrix);
 
-    struct Tuple inverse_half_quarter_point = mult_4x4_matrix_tuple(&inverse_half_quarter_x_rotation_matrix, &point, &error);
+    struct Tuple inverse_half_quarter_point; mult_4x4_matrix_tuple(&inverse_half_quarter_x_rotation_matrix, &point, &inverse_half_quarter_point);
 
-    int comp1 = is_equal_tuple(expected_inverse_half_quarter_point, inverse_half_quarter_point);
+    int comp1 = is_equal_tuple(&expected_inverse_half_quarter_point, &inverse_half_quarter_point);
 
     free_matrix(&half_quarter_x_rotation_matrix);
     free_matrix(&inverse_half_quarter_x_rotation_matrix);
@@ -1159,19 +1164,19 @@ int test_inverse_rotation_x_matrix()
 
 int test_rotation_y_matrix()
 {
-    struct Tuple point = new_point_tuple(0, 0, 1);
-    struct Tuple expected_half_quarter_point = new_point_tuple(sqrt(2) / 2, 0, sqrt(2) / 2);
-    struct Tuple expected_full_quarter_point = new_point_tuple(1, 0, 0);
+    struct Tuple point; new_point_tuple(&point, 0, 0, 1);
+    struct Tuple expected_half_quarter_point; new_point_tuple(&expected_half_quarter_point, sqrt(2) / 2, 0, sqrt(2) / 2);
+    struct Tuple expected_full_quarter_point; new_point_tuple(&expected_full_quarter_point, 1, 0, 0);
 
-    struct Matrix half_quarter_y_rotation_matrix = new_rotation_y_matrix(M_PI / 4.0);
-    struct Matrix full_quarter_y_rotation_matrix = new_rotation_y_matrix(M_PI / 2.0);
+    struct Matrix half_quarter_y_rotation_matrix; new_rotation_y_matrix(&half_quarter_y_rotation_matrix, M_PI / 4.0);
+    struct Matrix full_quarter_y_rotation_matrix; new_rotation_y_matrix(&full_quarter_y_rotation_matrix, M_PI / 2.0);
 
     int error = 0;
-    struct Tuple half_quarter_point = mult_4x4_matrix_tuple(&half_quarter_y_rotation_matrix, &point, &error);
-    struct Tuple full_quarter_point = mult_4x4_matrix_tuple(&full_quarter_y_rotation_matrix, &point, &error);
+    struct Tuple half_quarter_point; mult_4x4_matrix_tuple(&half_quarter_y_rotation_matrix, &point, &half_quarter_point);
+    struct Tuple full_quarter_point; mult_4x4_matrix_tuple(&full_quarter_y_rotation_matrix, &point, &full_quarter_point);
 
-    int comp1 = is_equal_tuple(expected_half_quarter_point, half_quarter_point);
-    int comp2 = is_equal_tuple(expected_full_quarter_point, full_quarter_point);
+    int comp1 = is_equal_tuple(&expected_half_quarter_point, &half_quarter_point);
+    int comp2 = is_equal_tuple(&expected_full_quarter_point, &full_quarter_point);
 
     free_matrix(&half_quarter_y_rotation_matrix);
     free_matrix(&full_quarter_y_rotation_matrix);
@@ -1183,19 +1188,19 @@ int test_rotation_y_matrix()
 
 int test_rotation_z_matrix()
 {
-    struct Tuple point = new_point_tuple(0, 1, 0);
-    struct Tuple expected_half_quarter_point = new_point_tuple(-1 * sqrt(2) / 2, sqrt(2) / 2, 0);
-    struct Tuple expected_full_quarter_point = new_point_tuple(-1, 0, 0);
+    struct Tuple point; new_point_tuple(&point, 0, 1, 0);
+    struct Tuple expected_half_quarter_point; new_point_tuple(&expected_half_quarter_point , -1 * sqrt(2) / 2, sqrt(2) / 2, 0);
+    struct Tuple expected_full_quarter_point; new_point_tuple(&expected_full_quarter_point , -1, 0, 0);
 
-    struct Matrix half_quarter_z_rotation_matrix = new_rotation_z_matrix(M_PI / 4.0);
-    struct Matrix full_quarter_z_rotation_matrix = new_rotation_z_matrix(M_PI / 2.0);
+    struct Matrix half_quarter_z_rotation_matrix; new_rotation_z_matrix(&half_quarter_z_rotation_matrix, M_PI / 4.0);
+    struct Matrix full_quarter_z_rotation_matrix; new_rotation_z_matrix(&full_quarter_z_rotation_matrix, M_PI / 2.0);
 
     int error = 0;
-    struct Tuple half_quarter_point = mult_4x4_matrix_tuple(&half_quarter_z_rotation_matrix, &point, &error);
-    struct Tuple full_quarter_point = mult_4x4_matrix_tuple(&full_quarter_z_rotation_matrix, &point, &error);
+    struct Tuple half_quarter_point; mult_4x4_matrix_tuple(&half_quarter_z_rotation_matrix, &point, &half_quarter_point);
+    struct Tuple full_quarter_point; mult_4x4_matrix_tuple(&full_quarter_z_rotation_matrix, &point, &full_quarter_point);
 
-    int comp1 = is_equal_tuple(expected_half_quarter_point, half_quarter_point);
-    int comp2 = is_equal_tuple(expected_full_quarter_point, full_quarter_point);
+    int comp1 = is_equal_tuple(&expected_half_quarter_point, &half_quarter_point);
+    int comp2 = is_equal_tuple(&expected_full_quarter_point, &full_quarter_point);
 
     free_matrix(&half_quarter_z_rotation_matrix);
     free_matrix(&full_quarter_z_rotation_matrix);
@@ -1207,41 +1212,41 @@ int test_rotation_z_matrix()
 
 int test_shearing_matrix()
 {
-    struct Matrix S1 = new_shearing_matrix(1, 0, 0, 0, 0, 0);
-    struct Matrix S2 = new_shearing_matrix(0, 1, 0, 0, 0, 0);
-    struct Matrix S3 = new_shearing_matrix(0, 0, 1, 0, 0, 0);
-    struct Matrix S4 = new_shearing_matrix(0, 0, 0, 1, 0, 0);
-    struct Matrix S5 = new_shearing_matrix(0, 0, 0, 0, 1, 0);
-    struct Matrix S6 = new_shearing_matrix(0, 0, 0, 0, 0, 1);
+    struct Matrix S1; new_shearing_matrix(&S1, 1, 0, 0, 0, 0, 0);
+    struct Matrix S2; new_shearing_matrix(&S2, 0, 1, 0, 0, 0, 0);
+    struct Matrix S3; new_shearing_matrix(&S3, 0, 0, 1, 0, 0, 0);
+    struct Matrix S4; new_shearing_matrix(&S4, 0, 0, 0, 1, 0, 0);
+    struct Matrix S5; new_shearing_matrix(&S5, 0, 0, 0, 0, 1, 0);
+    struct Matrix S6; new_shearing_matrix(&S6, 0, 0, 0, 0, 0, 1);
 
-    struct Tuple P1 = new_point_tuple(2, 3, 4);
-    struct Tuple P2 = new_point_tuple(2, 3, 4);
-    struct Tuple P3 = new_point_tuple(2, 3, 4);
-    struct Tuple P4 = new_point_tuple(2, 3, 4);
-    struct Tuple P5 = new_point_tuple(2, 3, 4);
-    struct Tuple P6 = new_point_tuple(2, 3, 4);
+    struct Tuple P1; new_point_tuple(&P1, 2, 3, 4);
+    struct Tuple P2; new_point_tuple(&P2, 2, 3, 4);
+    struct Tuple P3; new_point_tuple(&P3, 2, 3, 4);
+    struct Tuple P4; new_point_tuple(&P4, 2, 3, 4);
+    struct Tuple P5; new_point_tuple(&P5, 2, 3, 4);
+    struct Tuple P6; new_point_tuple(&P6, 2, 3, 4);
 
-    struct Tuple expected_sheared_P1 = new_point_tuple(5, 3, 4);
-    struct Tuple expected_sheared_P2 = new_point_tuple(6, 3, 4);
-    struct Tuple expected_sheared_P3 = new_point_tuple(2, 5, 4);
-    struct Tuple expected_sheared_P4 = new_point_tuple(2, 7, 4);
-    struct Tuple expected_sheared_P5 = new_point_tuple(2, 3, 6);
-    struct Tuple expected_sheared_P6 = new_point_tuple(2, 3, 7);
+    struct Tuple expected_sheared_P1; new_point_tuple(&expected_sheared_P1, 5, 3, 4);
+    struct Tuple expected_sheared_P2; new_point_tuple(&expected_sheared_P2, 6, 3, 4);
+    struct Tuple expected_sheared_P3; new_point_tuple(&expected_sheared_P3, 2, 5, 4);
+    struct Tuple expected_sheared_P4; new_point_tuple(&expected_sheared_P4, 2, 7, 4);
+    struct Tuple expected_sheared_P5; new_point_tuple(&expected_sheared_P5, 2, 3, 6);
+    struct Tuple expected_sheared_P6; new_point_tuple(&expected_sheared_P6, 2, 3, 7);
 
     int error = 0;
-    struct Tuple sheared_P1 = mult_4x4_matrix_tuple(&S1, &P1, &error);
-    struct Tuple sheared_P2 = mult_4x4_matrix_tuple(&S2, &P2, &error);
-    struct Tuple sheared_P3 = mult_4x4_matrix_tuple(&S3, &P3, &error);
-    struct Tuple sheared_P4 = mult_4x4_matrix_tuple(&S4, &P4, &error);
-    struct Tuple sheared_P5 = mult_4x4_matrix_tuple(&S5, &P5, &error);
-    struct Tuple sheared_P6 = mult_4x4_matrix_tuple(&S6, &P6, &error);
+    struct Tuple sheared_P1; mult_4x4_matrix_tuple(&S1, &P1, &sheared_P1);
+    struct Tuple sheared_P2; mult_4x4_matrix_tuple(&S2, &P2, &sheared_P2);
+    struct Tuple sheared_P3; mult_4x4_matrix_tuple(&S3, &P3, &sheared_P3);
+    struct Tuple sheared_P4; mult_4x4_matrix_tuple(&S4, &P4, &sheared_P4);
+    struct Tuple sheared_P5; mult_4x4_matrix_tuple(&S5, &P5, &sheared_P5);
+    struct Tuple sheared_P6; mult_4x4_matrix_tuple(&S6, &P6, &sheared_P6);
 
-    int comp1 = is_equal_tuple(sheared_P1, expected_sheared_P1);
-    int comp2 = is_equal_tuple(sheared_P2, expected_sheared_P2);
-    int comp3 = is_equal_tuple(sheared_P3, expected_sheared_P3);
-    int comp4 = is_equal_tuple(sheared_P4, expected_sheared_P4);
-    int comp5 = is_equal_tuple(sheared_P5, expected_sheared_P5);
-    int comp6 = is_equal_tuple(sheared_P6, expected_sheared_P6);
+    int comp1 = is_equal_tuple(&sheared_P1, &expected_sheared_P1);
+    int comp2 = is_equal_tuple(&sheared_P2, &expected_sheared_P2);
+    int comp3 = is_equal_tuple(&sheared_P3, &expected_sheared_P3);
+    int comp4 = is_equal_tuple(&sheared_P4, &expected_sheared_P4);
+    int comp5 = is_equal_tuple(&sheared_P5, &expected_sheared_P5);
+    int comp6 = is_equal_tuple(&sheared_P6, &expected_sheared_P6);
 
     free_matrix(&S1);
     free_matrix(&S2);
@@ -1261,24 +1266,24 @@ int test_shearing_matrix()
 
 int test_multiple_transformation()
 {
-    struct Tuple P1 = new_point_tuple(1, 0, 1);
-    struct Matrix R = new_rotation_x_matrix(M_PI / 2.0);
-    struct Matrix S = new_scaling_matrix(5, 5, 5);
-    struct Matrix T = new_translation_matrix(10, 5, 7);
+    struct Tuple P1; new_point_tuple(&P1, 1, 0, 1);
+    struct Matrix R; new_rotation_x_matrix(&R, M_PI / 2.0);
+    struct Matrix S; new_scaling_matrix(&S, 5, 5, 5);
+    struct Matrix T; new_translation_matrix(&T, 10, 5, 7);
 
-    struct Tuple expected_rotated_P1 = new_point_tuple(1, -1, 0);
-    struct Tuple expected_rotated_scaled_P1 = new_point_tuple(5, -5, 0);
-    struct Tuple expected_rotated_scaled_translated_P1 = new_point_tuple(15, 0, 7);
+    struct Tuple expected_rotated_P1; new_point_tuple(&expected_rotated_P1, 1, -1, 0);
+    struct Tuple expected_rotated_scaled_P1; new_point_tuple(&expected_rotated_scaled_P1, 5, -5, 0);
+    struct Tuple expected_rotated_scaled_translated_P1; new_point_tuple(&expected_rotated_scaled_translated_P1, 15, 0, 7);
 
     int error = 0;
-    struct Tuple rotated_P1 = mult_4x4_matrix_tuple(&R, &P1, &error);
-    struct Tuple rotated_scaled_P1 = mult_4x4_matrix_tuple(&S, &rotated_P1, &error);
-    struct Tuple rotated_scaled_translated_P1 = mult_4x4_matrix_tuple(&T, &rotated_scaled_P1, &error);
+    struct Tuple rotated_P1; mult_4x4_matrix_tuple(&R, &P1, &rotated_P1);
+    struct Tuple rotated_scaled_P1; mult_4x4_matrix_tuple(&S, &rotated_P1, &rotated_scaled_P1);
+    struct Tuple rotated_scaled_translated_P1; mult_4x4_matrix_tuple(&T, &rotated_scaled_P1, &rotated_scaled_translated_P1);
 
-    struct Matrix S_T = mult_4x4_matrices(&T, &S, &error);
-    struct Matrix S_T_R = mult_4x4_matrices(&S_T, &R, &error);
+    struct Matrix S_T; mult_4x4_matrices(&T, &S, &S_T);
+    struct Matrix S_T_R; mult_4x4_matrices(&S_T, &R, &S_T_R);
 
-    struct Tuple chained_rotated_scaled_translated_P1 = mult_4x4_matrix_tuple(&S_T_R, &P1, &error);
+    struct Tuple chained_rotated_scaled_translated_P1; mult_4x4_matrix_tuple(&S_T_R, &P1, &chained_rotated_scaled_translated_P1);
 
     free_matrix(&R);
     free_matrix(&S);
@@ -1286,10 +1291,10 @@ int test_multiple_transformation()
     free_matrix(&S_T);
     free_matrix(&S_T_R);
 
-    int comp1 = is_equal_tuple(expected_rotated_P1, rotated_P1);
-    int comp2 = is_equal_tuple(expected_rotated_scaled_P1, rotated_scaled_P1);
-    int comp3 = is_equal_tuple(expected_rotated_scaled_translated_P1, rotated_scaled_translated_P1);
-    int comp4 = is_equal_tuple(expected_rotated_scaled_translated_P1, chained_rotated_scaled_translated_P1);
+    int comp1 = is_equal_tuple(&expected_rotated_P1, &rotated_P1);
+    int comp2 = is_equal_tuple(&expected_rotated_scaled_P1, &rotated_scaled_P1);
+    int comp3 = is_equal_tuple(&expected_rotated_scaled_translated_P1, &rotated_scaled_translated_P1);
+    int comp4 = is_equal_tuple(&expected_rotated_scaled_translated_P1, &chained_rotated_scaled_translated_P1);
 
     if (comp1 != 1) { return -1; }
     else if (comp2 != 1) { return -2; }
@@ -1297,7 +1302,7 @@ int test_multiple_transformation()
     else if (comp4 != 1) { return -4; }
     else return 1;
 }
-
+/*
 // Chapter 5 Tests
 
 int test_new_ray()
@@ -1732,7 +1737,7 @@ int chapter_two_tests()
     return num_failed;
 }
 
-/*
+
 int chapter_three_tests()
 {
     int result = 0;
@@ -2054,7 +2059,7 @@ int chapter_four_tests()
 
     return num_failed;
 }
-
+/*
 int chapter_five_tests()
 {
     int result = 0;

@@ -462,7 +462,7 @@ unsigned int is_invertable_4x4_matrix(struct Matrix* A, int *error)
 	else { return 1; }
 }
 
-struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
+int inverse_4x4_matrix(struct Matrix* A, struct Matrix *inverse)
 {
 	float cofactor_matrix_values[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 	float inverse_matrix_values[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
@@ -500,14 +500,12 @@ struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
 		}
 	}
 
-	struct Matrix inverse_matrix;
-	res = new_matrix_4x4(&inverse_matrix, inverse_matrix_values);
+	res = new_matrix_4x4(inverse, inverse_matrix_values);
 
 	free_matrix(&cofactor_matrix);
 	free_matrix(&transposed_cofactor_matrix);
 
-	*error = 1;
-	return inverse_matrix;
+	return 1;
 }
 
 int new_translation_matrix(struct Matrix *matrix, float x, float y, float z)

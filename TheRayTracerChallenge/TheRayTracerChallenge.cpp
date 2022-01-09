@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     num_failed = chapter_two_tests();
     if (num_failed > 0) { printf("%i chapter_two_tests() failed.\n", num_failed); }
     else { printf("chapter_two_tests() passed.\n"); }
-/*
+
     num_failed = chapter_three_tests();
     if (num_failed > 0) { printf("%i chapter_three_tests() failed.\n", num_failed); }
     else { printf("chapter_three_tests() passed.\n"); }
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     num_failed = chapter_four_tests();
     if (num_failed > 0) { printf("%i chapter_four_tests() failed.\n", num_failed); }
     else { printf("chapter_four_tests() passed.\n"); }
-
+/*
     num_failed = chapter_five_tests();
     if (num_failed > 0) { printf("%i chapter_five_tests() failed.\n", num_failed); }
     else { printf("chapter_five_tests() passed.\n"); }
