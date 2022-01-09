@@ -423,7 +423,7 @@ float minor_4x4_matrix(struct Matrix* A, unsigned int row, unsigned int col, int
 
 	int local_error = 0;
 	struct Matrix submatrix;
-	int res = submatrix_4x4(&submatrix, A, row, col);
+	int res = submatrix_4x4(A, &submatrix, row, col);
 	if (res != 1) { *error = -2; return 0; }
 
 	float det = det_3x3_matrix(&submatrix, &local_error);
