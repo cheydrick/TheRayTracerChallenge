@@ -313,10 +313,10 @@ int test_projectile()
 */
 
 // Chapter 2 Tests
-/*
+
 int test_new_color()
 {
-    struct Color color = new_color(-0.5, 0.4, 1.7);
+    struct Color color; new_color(&color, -0.5, 0.4, 1.7);
 
     if (!is_equal_float(color.r, -0.5)) { return -1; }
     if (!is_equal_float(color.g, 0.4)) { return -2; }
@@ -327,9 +327,9 @@ int test_new_color()
 
 int test_add_colors()
 {
-    struct Color a = new_color(0.9, 0.6, 0.75);
-    struct Color b = new_color(0.7, 0.1, 0.25);
-    struct Color color = add_colors(a, b);
+    struct Color a; new_color(&a, 0.9, 0.6, 0.75);
+    struct Color b; new_color(&b, 0.7, 0.1, 0.25);
+    struct Color color; add_colors(&color, &a, &b);
 
     if (!is_equal_float(color.r, 1.6)) { return -1; }
     if (!is_equal_float(color.g, 0.7)) { return -2; }
@@ -340,9 +340,9 @@ int test_add_colors()
 
 int test_subtract_colors()
 {
-    struct Color a = new_color(0.9, 0.6, 0.75);
-    struct Color b = new_color(0.7, 0.1, 0.25);
-    struct Color color = subtract_colors(a, b);
+    struct Color a; new_color(&a, 0.9, 0.6, 0.75);
+    struct Color b; new_color(&b, 0.7, 0.1, 0.25);
+    struct Color color; subtract_colors(&color, &a, &b);
 
     if (!is_equal_float(color.r, 0.2)) { return -1; }
     if (!is_equal_float(color.g, 0.5)) { return -2; }
@@ -353,8 +353,8 @@ int test_subtract_colors()
 
 int test_mult_color_scalar()
 {
-    struct Color a = new_color(0.2, 0.3, 0.4);
-    struct Color color = mult_color_scalar(a, 2);
+    struct Color a; new_color(&a, 0.2, 0.3, 0.4);
+    struct Color color; mult_color_scalar(&color, &a, 2);
 
     if (!is_equal_float(color.r, 0.4)) { return -1; }
     if (!is_equal_float(color.g, 0.6)) { return -2; }
@@ -365,9 +365,9 @@ int test_mult_color_scalar()
 
 int test_mult_colors()
 {
-    struct Color a = new_color(1, 0.2, 0.4);
-    struct Color b = new_color(0.9, 1.0, 0.1);
-    struct Color color = mult_colors(a, b);
+    struct Color a; new_color(&a, 1, 0.2, 0.4);
+    struct Color b; new_color(&b, 0.9, 1.0, 0.1);
+    struct Color color; mult_colors(&color, &a, &b);
 
     if (!is_equal_float(color.r, 0.9)) { return -1; }
     if (!is_equal_float(color.g, 0.2)) { return -2; }
@@ -409,12 +409,12 @@ int test_set_pixel()
     struct Canvas canvas = new_canvas(10, 20);
     if (canvas.canvas == NULL) { return -1; }
 
-    struct Color red = new_color(1, 0, 0);
+    struct Color red; new_color(&red, 1, 0, 0);
 
-    set_pixel(&canvas, 2, 3, red);
-    struct Color color = get_pixel(canvas, 2, 3);
+    set_pixel(&canvas, 2, 3, &red);
+    struct Color color; get_pixel(&canvas, &color, 2, 3);
 
-    if (!is_equal_color(red, color)) { return -2; }
+    if (!is_equal_color(&red, &color)) { return -2; }
 
     free_canvas(&canvas);
     return 1;
@@ -456,13 +456,13 @@ int test_ppm_data()
     struct Canvas canvas = new_canvas(5, 3);
     if (canvas.canvas == NULL) { return -1; }
 
-    struct Color c1 = new_color(1.5, 0, 0);
-    struct Color c2 = new_color(0, 0.5, 0);
-    struct Color c3 = new_color(-0.5, 0, 1);
+    struct Color c1; new_color(&c1, 1.5, 0, 0);
+    struct Color c2; new_color(&c2, 0, 0.5, 0);
+    struct Color c3; new_color(&c3, -0.5, 0, 1);
 
-    set_pixel(&canvas, 0, 0, c1);
-    set_pixel(&canvas, 2, 1, c2);
-    set_pixel(&canvas, 4, 2, c3);
+    set_pixel(&canvas, 0, 0, &c1);
+    set_pixel(&canvas, 2, 1, &c2);
+    set_pixel(&canvas, 4, 2, &c3);
 
     // Construct the expected ppm data
     const char* expected_ppm_data_section = "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 128 0 0 0 0 0 0 0\n0 0 0 0 0 0 0 0 0 0 0 0 0 0 255\n";
@@ -496,9 +496,9 @@ int test_ppm_data_long()
     struct Canvas canvas = new_canvas(10, 2);
     if (canvas.canvas == NULL) { return -1; }
 
-    struct Color c1 = new_color(1, 0.8, 0.6);
+    struct Color c1; new_color(&c1, 1, 0.8, 0.6);
 
-    set_all_pixels(&canvas, c1);
+    set_all_pixels(&canvas, &c1);
 
     // Construct the expected ppm data
     const char* expected_ppm_data_section = "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204\n153 255 204 153 255 204 153 255 204 153 255 204 153\n255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204\n153 255 204 153 255 204 153 255 204 153 255 204 153\n";
@@ -526,6 +526,8 @@ int test_ppm_data_long()
     free(ppm_from_file);
     return 1;
 }
+
+/*
 
 // Chapter 3 Tests
 int test_4x4_matrix()
@@ -1631,7 +1633,7 @@ int chapter_one_tests()
 
     return num_failed;
 }
-/*
+
 int chapter_two_tests()
 {
     int result = 0;
@@ -1730,6 +1732,7 @@ int chapter_two_tests()
     return num_failed;
 }
 
+/*
 int chapter_three_tests()
 {
     int result = 0;

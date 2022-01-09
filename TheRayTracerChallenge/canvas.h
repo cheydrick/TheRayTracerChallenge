@@ -23,7 +23,8 @@ struct Canvas new_canvas(unsigned int width, unsigned int height)
 	unsigned int canvas_array_length = width * height;
 	for (int i = 0; i < canvas_array_length; i++)
 	{
-		canvas.canvas[i] = new_color(0, 0, 0);
+		//canvas.canvas[i] = new_color(0, 0, 0);
+		new_color(&canvas.canvas[i], 0, 0, 0);
 	}
 
 	return canvas;
@@ -42,7 +43,7 @@ void debug_print_canvas(struct Canvas canvas)
 		for (int x = 0; x < canvas.width; x++)
 		{
 			printf("X:%i Y:%i ", x, y);
-			debug_print_color(canvas.canvas[canvas_index]);
+			debug_print_color(&canvas.canvas[canvas_index]);
 			canvas_index++;
 		}
 	}
@@ -57,18 +58,19 @@ void free_canvas(struct Canvas* canvas)
 	}
 }
 
-struct Color get_pixel(struct Canvas canvas, unsigned int x, unsigned int y)
+int get_pixel(struct Canvas *canvas, struct Color *pixel_color, unsigned int x, unsigned int y)
 {
-	if (canvas.canvas == NULL) { return new_color(1, 1, 1); }
-	if (x > (canvas.width - 1)) { return new_color(1, 1, 1); }
-	if (y > (canvas.height - 1)) { return new_color(1, 1, 1); }
+	if (canvas->canvas == NULL) { new_color(pixel_color, 1, 1, 1); return -1; }
+	if (x > (canvas->width - 1)) { new_color(pixel_color, 1, 1, 1); return -1; }
+	if (y > (canvas->height - 1)) { new_color(pixel_color, 1, 1, 1); return -1; }
 
-	unsigned int canvas_array_index = (y * canvas.width) + x;
+	unsigned int canvas_array_index = (y * canvas->width) + x;
 
-	return canvas.canvas[canvas_array_index];
+	new_color(pixel_color, canvas->canvas[canvas_array_index].r, canvas->canvas[canvas_array_index].g, canvas->canvas[canvas_array_index].b);
+	return 1;
 }
 
-int set_pixel(struct Canvas* canvas, unsigned int x, unsigned int y, struct Color color)
+int set_pixel(struct Canvas* canvas, unsigned int x, unsigned int y, struct Color *color)
 {
 	if (canvas->canvas == NULL) { return -1; }
 	if (x > (canvas->width - 1)) { return -2; }
@@ -76,12 +78,12 @@ int set_pixel(struct Canvas* canvas, unsigned int x, unsigned int y, struct Colo
 
 	unsigned int canvas_array_index = (y * canvas->width) + x;
 
-	canvas->canvas[canvas_array_index] = color;
+	new_color(&canvas->canvas[canvas_array_index], color->r, color->g, color->b);
 
 	return 1;
 }
 
-int set_all_pixels(struct Canvas* canvas, struct Color color)
+int set_all_pixels(struct Canvas* canvas, struct Color *color)
 {
 	int res = 0;
 	for (int y = 0; y < canvas->height; y++)
@@ -95,6 +97,7 @@ int set_all_pixels(struct Canvas* canvas, struct Color color)
 	return 1;
 }
 
+// I am going to leave the canvas struct here as pass by value since I'm scared of this function. TODO later.
 int write_ppm(struct Canvas canvas, const char* filename)
 {
 	FILE* file;

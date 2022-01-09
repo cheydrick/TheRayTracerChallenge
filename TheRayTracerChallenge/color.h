@@ -9,66 +9,62 @@ struct Color
 	float b;
 };
 
-void debug_print_color(struct Color color)
+void debug_print_color(struct Color *color)
 {
-	printf("R: %f G: %f B: %f\n", color.r, color.g, color.b);
+	printf("R: %f G: %f B: %f\n", color->r, color->g, color->b);
 }
 
-int is_equal_color(struct Color a, struct Color b)
+int is_equal_color(struct Color *a, struct Color *b)
 {
-	if (!is_equal_float(a.r, b.r)) { return -1; }
-	if (!is_equal_float(a.g, b.g)) { return -1; }
-	if (!is_equal_float(a.b, b.b)) { return -1; }
+	if (!is_equal_float(a->r, b->r)) { return -1; }
+	if (!is_equal_float(a->g, b->g)) { return -1; }
+	if (!is_equal_float(a->b, b->b)) { return -1; }
 
 	return 1;
 }
 
-struct Color new_color(float red, float green, float blue)
+int new_color(struct Color *color, float red, float green, float blue)
 {
-	struct Color color;
-	color.r = red;
-	color.g = green;
-	color.b = blue;
+	color->r = red;
+	color->g = green;
+	color->b = blue;
 
-	return color;
+	return 1;
 }
 
-struct Color add_colors(struct Color a, struct Color b)
+int add_colors(struct Color *sum, struct Color *a, struct Color *b)
 {
-	struct Color color;
-	color.r = a.r + b.r;
-	color.g = a.g + b.g;
-	color.b = a.b + b.b;
+	sum->r = a->r + b->r;
+	sum->g = a->g + b->g;
+	sum->b = a->b + b->b;
 
-	return color;
+	return 1;
 }
 
-struct Color subtract_colors(struct Color a, struct Color b)
+int subtract_colors(struct Color *difference, struct Color *a, struct Color *b)
 {
-	struct Color color;
-	color.r = a.r - b.r;
-	color.g = a.g - b.g;
-	color.b = a.b - b.b;
+	difference->r = a->r - b->r;
+	difference->g = a->g - b->g;
+	difference->b = a->b - b->b;
 
-	return color;
+	return 1;
 }
 
-struct Color mult_color_scalar(struct Color a, float scalar)
+int mult_color_scalar(struct Color *product, struct Color *a, float scalar)
 {
-	struct Color color;
-	color.r = a.r * scalar;
-	color.g = a.g * scalar;
-	color.b = a.b * scalar;
+	product->r = a->r * scalar;
+	product->g = a->g * scalar;
+	product->b = a->b * scalar;
 
-	return color;
+	return 1;
 }
 
-struct Color mult_colors(struct Color a, struct Color b)
+int mult_colors(struct Color *product, struct Color *a, struct Color *b)
 {
 	struct Color color;
-	color.r = a.r * b.r;
-	color.g = a.g * b.g;
-	color.b = a.b * b.b;
+	product->r = a->r * b->r;
+	product->g = a->g * b->g;
+	product->b = a->b * b->b;
 
-	return color;
+	return 1;
 }
