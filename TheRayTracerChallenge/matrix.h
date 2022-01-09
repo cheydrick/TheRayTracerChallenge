@@ -1,10 +1,11 @@
-/*
 #pragma once
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include "tuple.h"
 #include "misc.h"
+
+// Note - functions that can return an error code do. Else you pass an int pointer for one to be filled in.
 
 struct Matrix
 {
@@ -13,21 +14,21 @@ struct Matrix
 	unsigned int cols;
 };
 
-struct Matrix new_matrix(unsigned int, unsigned int);
-void free_matrix(struct Matrix*);
+int new_matrix(struct Matrix *, unsigned int, unsigned int);
+int free_matrix(struct Matrix*);
 int set_matrix_element(struct Matrix*, unsigned int, unsigned int, float);
 float get_matrix_element(struct Matrix*, unsigned int, unsigned int, int*);
-struct Matrix new_matrix_4x4(float*);
-struct Matrix new_matrix_4x4_identity();
-struct Matrix new_matrix_2x2(float*);
-struct Matrix new_matrix_3x3(float*);
+int new_matrix_4x4(struct Matrix *, float*);
+int new_matrix_4x4_identity(struct Matrix *);
+int new_matrix_2x2(struct Matrix *, float*);
+int new_matrix_3x3(struct Matrix *, float*);
 int is_equal_matrix(unsigned int, unsigned int, struct Matrix*, struct Matrix*);
-struct Matrix mult_4x4_matrices(struct Matrix*, struct Matrix*, int*);
-struct Tuple mult_4x4_matrix_tuple(struct Matrix*, struct Tuple*, int*);
-struct Matrix transpose_4x4_matrix(struct Matrix*, int*);
+int mult_4x4_matrices(struct Matrix*, struct Matrix*, struct Matrix *);
+int mult_4x4_matrix_tuple(struct Matrix*, struct Tuple*, struct Tuple *);
+int transpose_4x4_matrix(struct Matrix*, struct Matrix *);
 float det_2x2_matrix(struct Matrix*, int*);
-struct Matrix submatrix_3x3(struct Matrix*, unsigned int, unsigned int, int*);
-struct Matrix submatrix_4x4(struct Matrix*, unsigned int, unsigned int, int*);
+int submatrix_3x3(struct Matrix*, struct Matrix *, unsigned int, unsigned int);
+int submatrix_4x4(struct Matrix*, struct Matrix *, unsigned int, unsigned int);
 float minor_3x3_matrix(struct Matrix*, unsigned int, unsigned int, int*);
 float cofactor_3x3_matrix(struct Matrix*, unsigned int, unsigned int, int*);
 float cofactor_4x4_matrix(struct Matrix*, unsigned int, unsigned int, int*);
@@ -35,23 +36,24 @@ float det_3x3_matrix(struct Matrix*, int*);
 float minor_4x4_matrix(struct Matrix*, unsigned int, unsigned int, int*);
 float det_4x4_matrix(struct Matrix*, int*);
 unsigned int is_invertable_4x4_matrix(struct Matrix*, int *);
-struct Matrix inverse_4x4_matrix(struct Matrix*, int*);
+int inverse_4x4_matrix(struct Matrix*, struct Matrix *);
 void debug_print_matrix(unsigned int, unsigned int, struct Matrix*);
 
-struct Matrix new_matrix(unsigned int rows, unsigned int cols)
+int new_matrix(struct Matrix *matrix, unsigned int rows, unsigned int cols)
 {
-	struct Matrix m;
-	m.rows = rows;
-	m.cols = cols;
-	m.elements = (float*)malloc(sizeof(float) * rows * cols);
-	if (m.elements != NULL) { memset(m.elements, 0, sizeof(float) * rows * cols); }
+	matrix->rows = rows;
+	matrix->cols = cols;
+	matrix->elements = (float*)malloc(sizeof(float) * rows * cols);
+	if (matrix->elements != NULL) { memset(matrix->elements, 0, sizeof(float) * rows * cols); }
+	else { return -1; }
 
-	return m;
+	return 1;
 }
 
-void free_matrix(struct Matrix* matrix)
+int free_matrix(struct Matrix* matrix)
 {
-	if (matrix->elements != NULL) { free(matrix->elements); }
+	if (matrix->elements != NULL) { free(matrix->elements); return 1; }
+	else { return -1; }
 }
 
 int set_matrix_element(struct Matrix* matrix, unsigned int row, unsigned int col, float value)
@@ -80,61 +82,70 @@ float get_matrix_element(struct Matrix* matrix, unsigned int row, unsigned int c
 	else { *error = -4; return -5; }
 }
 
-struct Matrix new_matrix_4x4(float* values)
+int new_matrix_4x4(struct Matrix *matrix, float* values)
 {
-	struct Matrix m = new_matrix(4, 4);
+	int res = new_matrix(matrix, 4, 4);
+	if (res != 1) { return -1; }
+
 	int index = 0;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			set_matrix_element(&m, i, j, values[index]);
+			res = set_matrix_element(matrix, i, j, values[index]);
+			if (res != 1) { return -2; }
 			index++;
 		}
 	}
 
-	return m;
+	return 1;
 }
 
-struct Matrix new_matrix_4x4_identity()
+int new_matrix_4x4_identity(struct Matrix *matrix)
 {
 	float identity_values[16] = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 
-	struct Matrix m = new_matrix_4x4(identity_values);
+	int res = new_matrix_4x4(matrix, identity_values);
+	if (res != 1) { return -1; }
 
-	return m;
+	return 1;
 }
 
-struct Matrix new_matrix_2x2(float* values)
+int new_matrix_2x2(struct Matrix *matrix, float* values)
 {
-	struct Matrix m = new_matrix(2, 2);
+	int res = new_matrix(matrix, 2, 2);
+	if (res != 1) { return -1; }
 	int index = 0;
 	for (int i = 0; i < 2; i++)
 	{
 		for (int j = 0; j < 2; j++)
 		{
-			set_matrix_element(&m, i, j, values[index]);
+			res = set_matrix_element(matrix, i, j, values[index]);
+			if (res != 1) { return -2; }
 			index++;
 		}
 	}
 
-	return m;
+	return 1;
 }
 
-struct Matrix new_matrix_3x3(float* values)
+int new_matrix_3x3(struct Matrix *matrix, float* values)
 {
-	struct Matrix m = new_matrix(3, 3);
+	int res = new_matrix(matrix, 3, 3);
+	if (res != 1) { return -1; }
+
 	int index = 0;
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			set_matrix_element(&m, i, j, values[index]);
+			set_matrix_element(matrix, i, j, values[index]);
+			if (res != 1) { return -2; }
 			index++;
 		}
 	}
 
-	return m;
+	return 1;
 }
 
 int is_equal_matrix(unsigned int rows, unsigned int cols, struct Matrix* A, struct Matrix* B)
@@ -154,11 +165,12 @@ int is_equal_matrix(unsigned int rows, unsigned int cols, struct Matrix* A, stru
 	return 1;
 }
 
-struct Matrix mult_4x4_matrices(struct Matrix* A, struct Matrix* B, int* error)
+int mult_4x4_matrices(struct Matrix* A, struct Matrix* B, struct Matrix *product)
 {
-	struct Matrix p = new_matrix(4, 4);
+	int res = new_matrix(product, 4, 4);
+	if (res != 1) { return -1; }
 
-	if ((A->rows != 4) || (A->cols != 4) || (B->rows != 4) || (B->cols != 4)) { *error = -1;  return p; }
+	if ((A->rows != 4) || (A->cols != 4) || (B->rows != 4) || (B->cols != 4)) { return -2; }
 
 	float tmp_prod = 0;
 	int err = 0;
@@ -172,17 +184,16 @@ struct Matrix mult_4x4_matrices(struct Matrix* A, struct Matrix* B, int* error)
 			tmp_prod += get_matrix_element(A, i, 2, &err) * get_matrix_element(B, 2, j, &err);
 			tmp_prod += get_matrix_element(A, i, 3, &err) * get_matrix_element(B, 3, j, &err);
 
-			set_matrix_element(&p, i, j, tmp_prod);
+			set_matrix_element(product, i, j, tmp_prod);
 			tmp_prod = 0;
 		}
 	}
-	*error = 1;
-	return p;
+	return 1;
 }
 
-struct Tuple mult_4x4_matrix_tuple(struct Matrix* A, struct Tuple* B, int* error)
+int mult_4x4_matrix_tuple(struct Matrix* A, struct Tuple* B, struct Tuple *product)
 {
-	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return new_tuple(0, 0, 0, 0); }
+	if ((A->rows != 4) || (A->cols != 4)) { new_tuple(product, 0, 0, 0, 0); return -1; }
 
 	float x = 0; float y = 0; float z = 0; float w = 0;
 
@@ -191,22 +202,23 @@ struct Tuple mult_4x4_matrix_tuple(struct Matrix* A, struct Tuple* B, int* error
 	z = (A->elements[8] * B->x) + (A->elements[9] * B->y) + (A->elements[10] * B->z) + (A->elements[11] * B->w);
 	w = (A->elements[12] * B->x) + (A->elements[13] * B->y) + (A->elements[14] * B->z) + (A->elements[15] * B->w);
 
-	return new_tuple(x, y, z, w);
+	new_tuple(product, x, y, z, w);
+	return 1;
 }
 
-struct Matrix transpose_4x4_matrix(struct Matrix* A, int* error)
+int transpose_4x4_matrix(struct Matrix* A, struct Matrix *transposed)
 {
 	float t_values[16] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
-	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return new_matrix_4x4(t_values); }
+	if ((A->rows != 4) || (A->cols != 4)) { new_matrix_4x4(transposed, t_values); return -1; }
 
 	t_values[0] = A->elements[0]; t_values[1] = A->elements[4]; t_values[2] = A->elements[8]; t_values[3] = A->elements[12];
 	t_values[4] = A->elements[1]; t_values[5] = A->elements[5]; t_values[6] = A->elements[9]; t_values[7] = A->elements[13];
 	t_values[8] = A->elements[2]; t_values[9] = A->elements[6]; t_values[10] = A->elements[10]; t_values[11] = A->elements[14];
 	t_values[12] = A->elements[3]; t_values[13] = A->elements[7]; t_values[14] = A->elements[11]; t_values[15] = A->elements[15];
 
-	*error = 1;
-	return new_matrix_4x4(t_values);
+	new_matrix_4x4(transposed, t_values);
+	return 1;
 }
 
 float det_2x2_matrix(struct Matrix* A, int* error)
@@ -217,11 +229,11 @@ float det_2x2_matrix(struct Matrix* A, int* error)
 	return ((A->elements[0] * A->elements[3]) - (A->elements[1] * A->elements[2]));
 }
 
-struct Matrix submatrix_3x3(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+int submatrix_3x3(struct Matrix* A, struct Matrix *submatrix, unsigned int row, unsigned int col)
 {
 	float b_values[4] = { 0,0,0,0 };
 
-	if ((A->rows != 3) || (A->cols != 3)) { *error = -1;  return new_matrix_2x2(b_values); }
+	if ((A->rows != 3) || (A->cols != 3)) { new_matrix_2x2(submatrix, b_values); return -1; }
 
 	//
 	if (row == 0 && col == 0) { b_values[0] = A->elements[4]; b_values[1] = A->elements[5]; b_values[2] = A->elements[7]; b_values[3] = A->elements[8]; }
@@ -238,15 +250,15 @@ struct Matrix submatrix_3x3(struct Matrix* A, unsigned int row, unsigned int col
 	if (row == 2 && col == 1) { b_values[0] = A->elements[0]; b_values[1] = A->elements[2]; b_values[2] = A->elements[3]; b_values[3] = A->elements[5]; }
 	if (row == 2 && col == 2) { b_values[0] = A->elements[0]; b_values[1] = A->elements[1]; b_values[2] = A->elements[3]; b_values[3] = A->elements[4]; }
 
-	*error = 1;
-	return new_matrix_2x2(b_values);
+	return new_matrix_2x2(submatrix, b_values);
+	return -1;
 }
 
-struct Matrix submatrix_4x4(struct Matrix* A, unsigned int row, unsigned int col, int* error)
+int submatrix_4x4(struct Matrix* A, struct Matrix *submatrix, unsigned int row, unsigned int col)
 {
 	float b_values[9] = { 0,0,0,0,0,0,0,0,0 };
 
-	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return new_matrix_3x3(b_values); }
+	if ((A->rows != 4) || (A->cols != 4)) { new_matrix_3x3(submatrix, b_values); return -1; }
 
 	//
 	if (row == 0 && col == 0) {
@@ -348,15 +360,17 @@ struct Matrix submatrix_4x4(struct Matrix* A, unsigned int row, unsigned int col
 		b_values[6] = A->elements[8]; b_values[7] = A->elements[9]; b_values[8] = A->elements[10];
 	}
 
-	*error = 1;
-	return new_matrix_3x3(b_values);
-
+	new_matrix_3x3(submatrix, b_values);
+	return 1;
 }
 
 float minor_3x3_matrix(struct Matrix* A, unsigned int row, unsigned int col, int* error)
 {
-	struct Matrix B = submatrix_3x3(A, row, col, error);
+	struct Matrix B;
+	int res = submatrix_3x3(A, &B, row, col);
+	if (res != 1) { *error = -1; return 0; }
 	float det = det_2x2_matrix(&B, error);
+	if (*error != 1) { return 0; }
 
 	*error = 1;
 	return det;
@@ -408,8 +422,9 @@ float minor_4x4_matrix(struct Matrix* A, unsigned int row, unsigned int col, int
 	if ((A->rows != 4) || (A->cols != 4)) { *error = -1;  return 0; }
 
 	int local_error = 0;
-	struct Matrix submatrix = submatrix_4x4(A, row, col, &local_error);
-	if (local_error != 1) { *error = -2; return 0; }
+	struct Matrix submatrix;
+	int res = submatrix_4x4(&submatrix, A, row, col);
+	if (res != 1) { *error = -2; return 0; }
 
 	float det = det_3x3_matrix(&submatrix, &local_error);
 	if (local_error != 1) { *error = -3; return 0; }
@@ -466,10 +481,12 @@ struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
 		}
 	}
 
-	struct Matrix cofactor_matrix = new_matrix_4x4(cofactor_matrix_values);
+	struct Matrix cofactor_matrix;
+	int res = new_matrix_4x4(&cofactor_matrix, cofactor_matrix_values);
 	
 	// Transpose the cofactor matrix
-	struct Matrix transposed_cofactor_matrix = transpose_4x4_matrix(&cofactor_matrix, &local_error);
+	struct Matrix transposed_cofactor_matrix;
+	res = transpose_4x4_matrix(&cofactor_matrix, &transposed_cofactor_matrix);
 
 	float det = det_4x4_matrix(A, &local_error);
 
@@ -483,7 +500,8 @@ struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
 		}
 	}
 
-	struct Matrix inverse_matrix = new_matrix_4x4(inverse_matrix_values);
+	struct Matrix inverse_matrix;
+	res = new_matrix_4x4(&inverse_matrix, inverse_matrix_values);
 
 	free_matrix(&cofactor_matrix);
 	free_matrix(&transposed_cofactor_matrix);
@@ -492,74 +510,78 @@ struct Matrix inverse_4x4_matrix(struct Matrix* A, int* error)
 	return inverse_matrix;
 }
 
-struct Matrix new_translation_matrix(float x, float y, float z)
+int new_translation_matrix(struct Matrix *matrix, float x, float y, float z)
 {
-	struct Matrix tmp_translation_matrix = new_matrix_4x4_identity();
-	tmp_translation_matrix.elements[3] = x;
-	tmp_translation_matrix.elements[7] = y;
-	tmp_translation_matrix.elements[11] = z;
+	int res = new_matrix_4x4_identity(matrix);
+	if (res != 1) { return -1; }
+	matrix->elements[3] = x;
+	matrix->elements[7] = y;
+	matrix->elements[11] = z;
 
-	return tmp_translation_matrix;
+	return 1;
 }
 
-struct Matrix new_scaling_matrix(float x, float y, float z)
+int new_scaling_matrix(struct Matrix* matrix, float x, float y, float z)
 {
-	struct Matrix tmp_scaling_matrix = new_matrix_4x4_identity();
-	tmp_scaling_matrix.elements[0] = x;
-	tmp_scaling_matrix.elements[5] = y;
-	tmp_scaling_matrix.elements[10] = z;
+	int res = new_matrix_4x4_identity(matrix);
+	if (res != 1) { return -1; }
+	matrix->elements[0] = x;
+	matrix->elements[5] = y;
+	matrix->elements[10] = z;
 
-	return tmp_scaling_matrix;
+	return 1;
 }
 
-struct Matrix new_rotation_x_matrix(float radians)
+int new_rotation_x_matrix(struct Matrix *matrix, float radians)
 {
-	struct Matrix tmp_rotation_matrix = new_matrix_4x4_identity();
+	int res = new_matrix_4x4_identity(matrix);
+	if (res != 1) { return -1; }
+	matrix->elements[5] = cos(radians);
+	matrix->elements[6] = -1.0 * sin(radians);
+	matrix->elements[9] = sin(radians);
+	matrix->elements[10] = cos(radians);
 
-	tmp_rotation_matrix.elements[5] = cos(radians);
-	tmp_rotation_matrix.elements[6] = -1.0 * sin(radians);
-	tmp_rotation_matrix.elements[9] = sin(radians);
-	tmp_rotation_matrix.elements[10] = cos(radians);
-
-	return tmp_rotation_matrix;
+	return 1;
 }
 
-struct Matrix new_rotation_y_matrix(float radians)
+int new_rotation_y_matrix(struct Matrix *matrix, float radians)
 {
-	struct Matrix tmp_rotation_matrix = new_matrix_4x4_identity();
+	int res = new_matrix_4x4_identity(matrix);
+	if (res != 1) { return -1; }
 
-	tmp_rotation_matrix.elements[0] = cos(radians);
-	tmp_rotation_matrix.elements[2] = sin(radians);
-	tmp_rotation_matrix.elements[8] = -1 * sin(radians);
-	tmp_rotation_matrix.elements[10] = cos(radians);
+	matrix->elements[0] = cos(radians);
+	matrix->elements[2] = sin(radians);
+	matrix->elements[8] = -1 * sin(radians);
+	matrix->elements[10] = cos(radians);
 
-	return tmp_rotation_matrix;
+	return 1;
 }
 
-struct Matrix new_rotation_z_matrix(float radians)
+int new_rotation_z_matrix(struct Matrix *matrix, float radians)
 {
-	struct Matrix tmp_rotation_matrix = new_matrix_4x4_identity();
+	int res = new_matrix_4x4_identity(matrix);
+	if (res != 1) { return -1; }
 
-	tmp_rotation_matrix.elements[0] = cos(radians);
-	tmp_rotation_matrix.elements[1] = -1 * sin(radians);
-	tmp_rotation_matrix.elements[4] = sin(radians);
-	tmp_rotation_matrix.elements[5] = cos(radians);
+	matrix->elements[0] = cos(radians);
+	matrix->elements[1] = -1 * sin(radians);
+	matrix->elements[4] = sin(radians);
+	matrix->elements[5] = cos(radians);
 
-	return tmp_rotation_matrix;
+	return 1;
 }
 
-struct Matrix new_shearing_matrix(float xy, float xz, float yx, float yz, float zx, float zy)
+int new_shearing_matrix(struct Matrix *matrix, float xy, float xz, float yx, float yz, float zx, float zy)
 {
-	struct Matrix tmp_shearing_matrix = new_matrix_4x4_identity();
+	int res = new_matrix_4x4_identity(matrix);
+	if (res != 1) { return -1; }
+	matrix->elements[1] = xy;
+	matrix->elements[2] = xz;
+	matrix->elements[4] = yx;
+	matrix->elements[6] = yz;
+	matrix->elements[8] = zx;
+	matrix->elements[9] = zy;
 
-	tmp_shearing_matrix.elements[1] = xy;
-	tmp_shearing_matrix.elements[2] = xz;
-	tmp_shearing_matrix.elements[4] = yx;
-	tmp_shearing_matrix.elements[6] = yz;
-	tmp_shearing_matrix.elements[8] = zx;
-	tmp_shearing_matrix.elements[9] = zy;
-
-	return tmp_shearing_matrix;
+	return 1;
 }
 
 void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
@@ -574,4 +596,3 @@ void debug_print_matrix(unsigned int rows, unsigned int cols, struct Matrix* A)
 		printf("\n");
 	}
 }
-*/
