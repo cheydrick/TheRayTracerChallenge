@@ -1,4 +1,3 @@
-/*
 #pragma once
 #include "tuple.h"
 
@@ -8,31 +7,35 @@ struct Ray
 	struct Tuple direction;
 };
 
-struct Ray new_ray(struct Tuple origin, struct Tuple direction)
+int new_ray(struct Ray *ray, struct Tuple *origin, struct Tuple *direction)
 {
 	struct Ray tmp_ray;
-	tmp_ray.origin = origin;
-	tmp_ray.direction = direction;
+	ray->origin = *origin;
+	ray->direction = *direction;
 
-	return tmp_ray;
+	return 1;
 }
 
-struct Tuple get_ray_origin(struct Ray* ray)
+int get_ray_origin(struct Tuple *origin, struct Ray* ray)
 {
-	return ray->origin;
+	*origin = ray->origin;
+
+	return 1;
 }
 
-struct Tuple get_ray_direction(struct Ray* ray)
+int get_ray_direction(struct Tuple *direction, struct Ray* ray)
 {
-	return ray->direction;
+	*direction = ray->direction;
+
+	return 1;
 }
 
-struct Tuple ray_position(struct Ray *ray, float t)
+int ray_position(struct Tuple *position, struct Ray *ray, float t)
 {
-	struct Tuple tmp_point;
+	struct Tuple tmp_mult;
+	mult_tuple_scalar(&tmp_mult, &ray->direction, t);
 
-	tmp_point = add_tuples(ray->origin, mult_tuple_scalar(ray->direction, t));
+	add_tuples(position, &ray->origin, &tmp_mult);
 
-	return tmp_point;
+	return 1;
 }
-*/
