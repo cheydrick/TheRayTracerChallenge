@@ -1302,20 +1302,20 @@ int test_multiple_transformation()
     else if (comp4 != 1) { return -4; }
     else return 1;
 }
-/*
+
 // Chapter 5 Tests
 
 int test_new_ray()
 {
-    struct Tuple origin = new_point_tuple(1, 2, 3);
-    struct Tuple direction = new_vector_tuple(4, 5, 6);
-    struct Ray ray = new_ray(origin, direction);
+    struct Tuple origin; new_point_tuple(&origin, 1, 2, 3);
+    struct Tuple direction; new_vector_tuple(&direction, 4, 5, 6);
+    struct Ray ray; new_ray(&ray, &origin, &direction);
 
-    struct Tuple ray_origin = get_ray_origin(&ray);
-    struct Tuple ray_direction = get_ray_direction(&ray);
+    struct Tuple ray_origin; get_ray_origin(&ray_origin, &ray);
+    struct Tuple ray_direction; get_ray_direction(&ray_direction, &ray);
 
-    int comp1 = is_equal_tuple(origin, ray_origin);
-    int comp2 = is_equal_tuple(direction, ray_direction);
+    int comp1 = is_equal_tuple(&origin, &ray_origin);
+    int comp2 = is_equal_tuple(&direction, &ray_direction);
 
     if (comp1 != 1) { return -1; }
     else if (comp2 != 1) { return -2; }
@@ -1325,24 +1325,24 @@ int test_new_ray()
 
 int test_ray_position()
 {
-    struct Tuple origin = new_point_tuple(2, 3, 4);
-    struct Tuple direction = new_vector_tuple(1, 0, 0);
-    struct Ray ray = new_ray(origin, direction);
+    struct Tuple origin; new_point_tuple(&origin, 2, 3, 4);
+    struct Tuple direction; new_vector_tuple(&direction, 1, 0, 0);
+    struct Ray ray; new_ray(&ray, &origin, &direction);
 
-    struct Tuple expected_P1 = new_point_tuple(2, 3, 4);
-    struct Tuple expected_P2 = new_point_tuple(3, 3, 4);
-    struct Tuple expected_P3 = new_point_tuple(1, 3, 4);
-    struct Tuple expected_P4 = new_point_tuple(4.5, 3, 4);
+    struct Tuple expected_P1; new_point_tuple(&expected_P1, 2, 3, 4);
+    struct Tuple expected_P2; new_point_tuple(&expected_P2, 3, 3, 4);
+    struct Tuple expected_P3; new_point_tuple(&expected_P3, 1, 3, 4);
+    struct Tuple expected_P4; new_point_tuple(&expected_P4, 4.5, 3, 4);
 
-    struct Tuple P1 = ray_position(&ray, 0);
-    struct Tuple P2 = ray_position(&ray, 1);
-    struct Tuple P3 = ray_position(&ray, -1);
-    struct Tuple P4 = ray_position(&ray, 2.5);
+    struct Tuple P1; ray_position(&P1, &ray, 0);
+    struct Tuple P2; ray_position(&P2, &ray, 1);
+    struct Tuple P3; ray_position(&P3, &ray, -1);
+    struct Tuple P4; ray_position(&P4, &ray, 2.5);
 
-    int comp1 = is_equal_tuple(expected_P1, P1);
-    int comp2 = is_equal_tuple(expected_P2, P2);
-    int comp3 = is_equal_tuple(expected_P3, P3);
-    int comp4 = is_equal_tuple(expected_P4, P4);
+    int comp1 = is_equal_tuple(&expected_P1, &P1);
+    int comp2 = is_equal_tuple(&expected_P2, &P2);
+    int comp3 = is_equal_tuple(&expected_P3, &P3);
+    int comp4 = is_equal_tuple(&expected_P4, &P4);
 
     if (comp1 != 1) { return -1; }
     else if (comp2 != 1) { return -2; }
@@ -1353,8 +1353,11 @@ int test_ray_position()
 
 int test_sphere_intersection_two_points()
 {
-    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
-    struct Ray ray = new_ray(new_point_tuple(0, 0, -5), new_vector_tuple(0, 0, 1));
+    struct Tuple tmp_origin; new_point_tuple(&tmp_origin, 0, 0, 0);
+    struct Sphere sphere; new_sphere(&sphere, &tmp_origin, 1, 1);
+    new_point_tuple(&tmp_origin, 0, 0, -5);
+    struct Tuple tmp_direction; new_vector_tuple(&tmp_direction, 0, 0, 1);
+    struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
@@ -1380,8 +1383,11 @@ int test_sphere_intersection_two_points()
 
 int test_sphere_intersection_tangent()
 {
-    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
-    struct Ray ray = new_ray(new_point_tuple(0, 1, -5), new_vector_tuple(0, 0, 1));
+    struct Tuple tmp_origin; new_point_tuple(&tmp_origin, 0, 0, 0);
+    struct Sphere sphere; new_sphere(&sphere, &tmp_origin, 1, 1);
+    new_point_tuple(&tmp_origin, 0, 1, -5);
+    struct Tuple tmp_direction; new_vector_tuple(&tmp_direction, 0, 0, 1);
+    struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
@@ -1408,8 +1414,11 @@ int test_sphere_intersection_tangent()
 
 int test_sphere_intersection_miss()
 {
-    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
-    struct Ray ray = new_ray(new_point_tuple(0, 2, -5), new_vector_tuple(0, 0, 1));
+    struct Tuple tmp_origin; new_point_tuple(&tmp_origin, 0, 0, 0);
+    struct Sphere sphere; new_sphere(&sphere, &tmp_origin, 1, 1);
+    new_point_tuple(&tmp_origin, 0, 2, -5);
+    struct Tuple tmp_direction; new_vector_tuple(&tmp_direction, 0, 0, 1);
+    struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
@@ -1421,8 +1430,11 @@ int test_sphere_intersection_miss()
 
 int test_sphere_intersection_ray_inside_sphere()
 {
-    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
-    struct Ray ray = new_ray(new_point_tuple(0, 0, 0), new_vector_tuple(0, 0, 1));
+    struct Tuple tmp_origin; new_point_tuple(&tmp_origin, 0, 0, 0);
+    struct Sphere sphere; new_sphere(&sphere, &tmp_origin, 1, 1);
+    new_point_tuple(&tmp_origin, 0, 0, 0);
+    struct Tuple tmp_direction; new_vector_tuple(&tmp_direction, 0, 0, 1);
+    struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
@@ -1449,8 +1461,11 @@ int test_sphere_intersection_ray_inside_sphere()
 
 int test_sphere_intersection_sphere_behind_ray()
 {
-    struct Sphere sphere = new_sphere(new_point_tuple(0, 0, 0), 1, 1);
-    struct Ray ray = new_ray(new_point_tuple(0, 0, 5), new_vector_tuple(0, 0, 1));
+    struct Tuple tmp_origin; new_point_tuple(&tmp_origin, 0, 0, 0);
+    struct Sphere sphere; new_sphere(&sphere, &tmp_origin, 1, 1);
+    new_point_tuple(&tmp_origin, 0, 0, 5);
+    struct Tuple tmp_direction; new_vector_tuple(&tmp_direction, 0, 0, 1);
+    struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
     int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
@@ -1474,7 +1489,7 @@ int test_sphere_intersection_sphere_behind_ray()
 
     return 1;
 }
-*/
+
 int chapter_one_tests()
 {
     int result = 0;
@@ -2059,7 +2074,7 @@ int chapter_four_tests()
 
     return num_failed;
 }
-/*
+
 int chapter_five_tests()
 {
     int result = 0;
@@ -2130,4 +2145,3 @@ int chapter_five_tests()
 
     return num_failed;
 }
-*/

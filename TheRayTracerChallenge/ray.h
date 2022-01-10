@@ -9,7 +9,6 @@ struct Ray
 
 int new_ray(struct Ray *ray, struct Tuple *origin, struct Tuple *direction)
 {
-	struct Ray tmp_ray;
 	ray->origin = *origin;
 	ray->direction = *direction;
 

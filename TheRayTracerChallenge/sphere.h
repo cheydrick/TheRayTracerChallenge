@@ -9,24 +9,23 @@ struct Sphere
 	int id;
 };
 
-struct Sphere new_sphere(struct Tuple origin, float radius, int id)
+int new_sphere(struct Sphere *sphere, struct Tuple *origin, float radius, int id)
 {
-	struct Sphere tmp_sphere;
-	tmp_sphere.origin = origin;
-	tmp_sphere.radius = radius;
-	tmp_sphere.id = id;
+	sphere->origin = *origin;
+	sphere->radius = radius;
+	sphere->id = id;
 
-	return tmp_sphere;
+	return 1;
 }
 
 int intersect(struct Sphere* sphere, struct Ray* ray, float **t_intersections)
 {
 	// Calculate the discriminant
-	struct Tuple vec_sphere_to_ray = subtract_tuples(ray->origin, sphere->origin);
+	struct Tuple vec_sphere_to_ray; subtract_tuples(&vec_sphere_to_ray, &ray->origin, &sphere->origin);
 
-	float a = dot_product(ray->direction, ray->direction);
-	float b = 2.0 * dot_product(ray->direction, vec_sphere_to_ray);
-	float c = dot_product(vec_sphere_to_ray, vec_sphere_to_ray) - 1;
+	float a = dot_product(&ray->direction, &ray->direction);
+	float b = 2.0 * dot_product(&ray->direction, &vec_sphere_to_ray);
+	float c = dot_product(&vec_sphere_to_ray, &vec_sphere_to_ray) - 1;
 
 	float discriminant = (b * b) - (4.0 * a * c);
 
