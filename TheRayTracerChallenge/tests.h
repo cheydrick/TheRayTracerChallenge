@@ -1360,7 +1360,7 @@ int test_sphere_intersection_two_points()
     struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
+    int num_intersections = intersect_sphere(&sphere, &ray, &intersection_t_values);
     if (intersection_t_values == NULL)
     {
         printf("intersection_t_values is null.\n");
@@ -1390,7 +1390,7 @@ int test_sphere_intersection_tangent()
     struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
+    int num_intersections = intersect_sphere(&sphere, &ray, &intersection_t_values);
 
     if (intersection_t_values == NULL)
     {
@@ -1421,7 +1421,7 @@ int test_sphere_intersection_miss()
     struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
+    int num_intersections = intersect_sphere(&sphere, &ray, &intersection_t_values);
 
     if (num_intersections != 0) { return -1; }
 
@@ -1437,7 +1437,7 @@ int test_sphere_intersection_ray_inside_sphere()
     struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
+    int num_intersections = intersect_sphere(&sphere, &ray, &intersection_t_values);
 
     if (intersection_t_values == NULL)
     {
@@ -1468,7 +1468,7 @@ int test_sphere_intersection_sphere_behind_ray()
     struct Ray ray; new_ray(&ray, &tmp_origin, &tmp_direction);
 
     float* intersection_t_values = NULL;
-    int num_intersections = intersect(&sphere, &ray, &intersection_t_values);
+    int num_intersections = intersect_sphere(&sphere, &ray, &intersection_t_values);
 
     if (intersection_t_values == NULL)
     {

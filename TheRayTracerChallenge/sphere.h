@@ -18,7 +18,7 @@ int new_sphere(struct Sphere *sphere, struct Tuple *origin, float radius, int id
 	return 1;
 }
 
-int intersect(struct Sphere* sphere, struct Ray* ray, float **t_intersections)
+int intersect_sphere(struct Sphere* sphere, struct Ray* ray, float **t_intersections)
 {
 	// Calculate the discriminant
 	struct Tuple vec_sphere_to_ray; subtract_tuples(&vec_sphere_to_ray, &ray->origin, &sphere->origin);
